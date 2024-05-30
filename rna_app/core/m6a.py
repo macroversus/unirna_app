@@ -1,4 +1,4 @@
-from rna_app.core.utils import deeprna_infer
+from .utils import deeprna_infer
 
 
 def infer_m6a(in_filepath: str, output_dir: str) -> int:

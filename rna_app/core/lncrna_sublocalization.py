@@ -1,4 +1,4 @@
-from rna_app.core.utils import deeprna_infer
+from .utils import deeprna_infer
 
 
 def infer_lncrna_sublocalization(in_filepath: str, output_dir: str) -> int:
@@ -10,6 +10,6 @@ def infer_lncrna_sublocalization(in_filepath: str, output_dir: str) -> int:
         seq_col="cdna",
         label_col="tag",
         level="token",
-        out_seq_colname="cdna",
+        out_seq_colname="lncrna_sequence",
     )
     return 0
