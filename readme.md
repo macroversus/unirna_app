@@ -5,7 +5,9 @@
 ## Installation
 
 ```shell
-
+pip install git+ssh://git@git.dp.tech/macromolecule/deepprotein.git@deeprna
+pip install git+ssh://git@git.dp.tech/macromolecule/unirna_transformers.git@master
+pip install -U "dp-launching-sdk"
 ```
 
 ## Description
