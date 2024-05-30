@@ -1,6 +1,7 @@
 from dp.launching.cli import to_runner, default_minimal_exception_handler
-from dp.launching.typing import BaseModel, Field, InputFilePath, String, Enum
-
+from dp.launching.typing import BaseModel, Field, InputFilePath, String, Enum, OutputDirectory
+from rna_app.core.rna_ss import infer_ss
+from rna_app._version import __version__
 
 class ModelTypeOptions(String, Enum):
     """
@@ -17,20 +18,22 @@ class LazyInferenceOptions(BaseModel):
         default="Type_1 - trained on the Uni-RNA 50% threshold secondary structure dataset",
         description="Model type",
     )
-    # output_dir: OutputDirectory = Field(default="/output", description="Output directory")
-    # output_file: String = Field(default="result.pkl", description="Path to the result file")
+    output_dir: OutputDirectory = Field(default="output", description="Output directory")
 
-def main(opts: LazyInferenceOptions):...
-
+def main(opts: LazyInferenceOptions):
+    infer_ss(
+        in_filepath=opts.input_data.get_full_path(),
+        output_dir=opts.output_dir.get_full_path(),
+        model_type="unirna" if opts.model_type == ModelTypeOptions.unirna else "archiveii",
+    )
 
 def to_parser():
     return to_runner(
         LazyInferenceOptions,
         main,
-        version="0.1.0",
+        version=__version__,
         exception_handler=default_minimal_exception_handler,
     )
-
 
 if __name__ == "__main__":
     import sys

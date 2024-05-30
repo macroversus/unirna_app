@@ -2,6 +2,7 @@ from .utils import deeprna_infer
 
 
 def infer_ss(in_filepath: str, output_dir: str, model_type: str) -> int:
+    assert model_type in ["unirna", "archiveii"], f"model_type {model_type} not supported. Supported model_type: ['unirna', 'archiveii']"
     deeprna_infer(
         in_filepath=in_filepath,
         mission="ss_unirna" if model_type == "unirna" else "ss_archiveii",

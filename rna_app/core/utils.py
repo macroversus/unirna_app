@@ -64,6 +64,7 @@ def read_in_data(in_filepath: str, seq_col: str = "seq", label_col: str = "label
     return out
 
 def save_dataframe(df: pd.DataFrame, output_path: str):
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     if output_path.endswith("csv"):
         df.to_csv(output_path, index=False)
     elif output_path.endswith("tsv"):
@@ -75,7 +76,7 @@ def save_dataframe(df: pd.DataFrame, output_path: str):
     else:
         raise ValueError("Output file format not supported")
 
-def deeprna_infer(in_filepath: str, mission: str, pretrained: str, output_path: str | None = None, return_df: bool = False, seq_col: str = "seq", label_col: str = "label", level: str = "seq"):
+def deeprna_infer(in_filepath: str, mission: str, pretrained: str, output_path: Optional[str] = None, return_df: bool = False, seq_col: str = "seq", label_col: str = "label", level: str = "seq"):
     assert mission in CHEKPOINTS.keys(), f"mission {mission} not supported. Supported missions: {list(CHEKPOINTS.keys())}"
     assert pretrained in PRETRAINED.keys(), f"pretrained {pretrained} not supported. Supported pretrained: {list(PRETRAINED.keys())}"
     infer = LazyInferencer(
@@ -85,7 +86,6 @@ def deeprna_infer(in_filepath: str, mission: str, pretrained: str, output_path: 
     )
     in_data = read_in_data(in_filepath = in_filepath, seq_col = seq_col, label_col = label_col)
     result_unirna = infer.run(in_data)
-    print(result_unirna)
     if level == "seq":
         in_data[label_col] = [item for lst in result_unirna[label_col] for item in lst]
     elif level == "token":
