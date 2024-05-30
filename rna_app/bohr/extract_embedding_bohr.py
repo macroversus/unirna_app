@@ -22,9 +22,9 @@ class SingleOptions(BaseModel):
     """
 
     input_data: InputFilePath = Field(default=None, description="Upload fasta file")
-    model_type: ModelTypeOptions = Field(
+    pretrained: ModelTypeOptions = Field(
         default="unirna_L16_E1024_DPRNA500M_STEP400K",
-        title="Model Type",
+        title="Pretrained Weights",
         description="Choose which unirna weights to use. The default is 'unirna_L16_E1024_DPRNA500M_STEP400K'.",
     )
     output_dir: OutputDirectory = Field(default="output", description="Output directory")
@@ -38,7 +38,7 @@ def main(opts: SingleOptions) -> int:
     extract_embedding(
         in_filepath=opts.input_data.get_full_path(),
         output_dir=opts.output_dir.get_full_path(),
-        pretrained=opts.model_type.split("_")[1],
+        pretrained=opts.pretrained.split("_")[1],
         output_attentions=opts.output_attentions,
     )
     return 0
