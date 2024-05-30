@@ -45,8 +45,8 @@ dependencies = [
   "setuptools_scm",
   "pytest",
   "pytest-cov",
-  "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein#egg=e4f86b5d82ab731bd7d38df2505b031142020e7d",
-  "unirna_tf@git+ssh://git@git.dp.tech/macromolecule/unirna_transformers#egg=8bcf41ecd8e94be0bb7ec0472b9d70d385d731d2",
+  "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
+  "unirna_tf@git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
 ]
 
 [tool.setuptools]
