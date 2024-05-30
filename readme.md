@@ -5,6 +5,7 @@
 ## Installation
 
 ```shell
+pip install --no-cache-dir -U pip setuptools wheel
 pip install --no-cache-dir -e .
 zsh download_checkpoints.sh
 ```
