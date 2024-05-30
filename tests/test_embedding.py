@@ -1,0 +1,18 @@
+import pytest
+import subprocess
+from pathlib import Path
+from rna_app.core.utils import PRETRAINED
+
+@pytest.mark.parametrize("pretrained", list(PRETRAINED.keys()))
+def test_runner(pretrained: str):
+    repo_root = Path(__file__).parent.parent
+    cmd = [
+        "python",
+        f"{repo_root}/rna_app/bohr/extract_embedding_bohr.py",
+        "--input_data", f"{repo_root}/example/extract_embedding/input.fasta",
+        "--output_dir", f"{repo_root}/example/extract_embedding/outputs/{pretrained}",
+        "--pretrained", pretrained,
+    ]
+    subprocess.run(
+        cmd,
+    )
