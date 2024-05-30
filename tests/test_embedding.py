@@ -13,6 +13,10 @@ def test_runner(pretrained: str):
         "--output_dir", f"{repo_root}/example/extract_embedding/outputs/{pretrained}",
         "--pretrained", pretrained,
     ]
-    subprocess.run(
+    ret = subprocess.run(
         cmd,
     )
+    assert ret.returncode == 0, f"Failed to run {cmd}"
+
+if __name__ == '__main__':
+    pytest.main(['-v', __file__])

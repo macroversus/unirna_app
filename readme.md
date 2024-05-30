@@ -5,10 +5,7 @@
 ## Installation
 
 ```shell
-pip install --no-cache-dir git+ssh://git@git.dp.tech/macromolecule/deepprotein.git@deeprna
-pip install --no-cache-dir git+ssh://git@git.dp.tech/macromolecule/unirna_transformers.git@master
-pip install --no-cache-dir -U "dp-launching-sdk"
-pip install --no-cache-dir setuptools_scm pytest pytest-cov
+pip install --no-cache-dir -e .
 zsh download_checkpoints.sh
 ```
 

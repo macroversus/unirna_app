@@ -25,6 +25,10 @@ def test_runner(mission):
                 "--output_dir", f"{repo_root}/example/{mission}/outputs",
             ]
         )
-    subprocess.run(
+    ret = subprocess.run(
         cmd,
     )
+    assert ret.returncode == 0, f"Failed to run {cmd}"
+
+if __name__ == '__main__':
+    pytest.main(['-v', __file__])
