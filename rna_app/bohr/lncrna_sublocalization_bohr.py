@@ -8,9 +8,13 @@ from dp.launching.typing import (
 from rna_app.core.lncrna_sublocalization import infer_lncrna_sublocalization
 from rna_app._version import __version__
 
+
 class LazyInferenceOptions(BaseModel):
     input_data: InputFilePath = Field(default=None, description="Config")
-    output_dir: OutputDirectory = Field(default="output", description="Output directory")
+    output_dir: OutputDirectory = Field(
+        default="output", description="Output directory"
+    )
+
 
 def main(opts: LazyInferenceOptions) -> int:
     infer_lncrna_sublocalization(

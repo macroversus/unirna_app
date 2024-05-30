@@ -26,7 +26,10 @@ PRETRAINED = {
     "L24": PRETRAINED_DIR / "unirna_L24_E1280_STEP180K_DPRNA500M",
 }
 
-def read_in_data(in_filepath: str, seq_col: str = "seq", label_col: str = "label") -> pd.DataFrame:
+
+def read_in_data(
+    in_filepath: str, seq_col: str = "seq", label_col: str = "label"
+) -> pd.DataFrame:
     """_summary_
 
     Args:
@@ -39,7 +42,7 @@ def read_in_data(in_filepath: str, seq_col: str = "seq", label_col: str = "label
 
     Returns:
         pd.DataFrame: 可用于deeprna推理的DataFrame
-    """    
+    """
     for i in ["name", "description", "id"]:
         if i not in [seq_col, label_col]:
             name_colname = i
@@ -63,6 +66,7 @@ def read_in_data(in_filepath: str, seq_col: str = "seq", label_col: str = "label
         raise ValueError("Input file format not supported")
     return out
 
+
 def save_dataframe(df: pd.DataFrame, output_path: str):
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     if output_path.endswith("csv"):
@@ -76,15 +80,33 @@ def save_dataframe(df: pd.DataFrame, output_path: str):
     else:
         raise ValueError("Output file format not supported")
 
-def deeprna_infer(in_filepath: str, mission: str, pretrained: str, output_path: Optional[str] = None, return_df: bool = False, seq_col: str = "seq", label_col: str = "label", level: str = "seq"):
-    assert mission in CHEKPOINTS.keys(), f"mission {mission} not supported. Supported missions: {list(CHEKPOINTS.keys())}"
-    assert pretrained in PRETRAINED.keys(), f"pretrained {pretrained} not supported. Supported pretrained: {list(PRETRAINED.keys())}"
+
+def deeprna_infer(
+    in_filepath: str,
+    mission: str,
+    pretrained: str,
+    output_path: Optional[str] = None,
+    return_df: bool = False,
+    seq_col: str = "seq",
+    label_col: str = "label",
+    level: str = "seq",
+    out_seq_colname: Optional[str] = None,
+    out_label_colname: Optional[str] = None,
+):
+    assert (
+        mission in CHEKPOINTS.keys()
+    ), f"mission {mission} not supported. Supported missions: {list(CHEKPOINTS.keys())}"
+    assert (
+        pretrained in PRETRAINED.keys()
+    ), f"pretrained {pretrained} not supported. Supported pretrained: {list(PRETRAINED.keys())}"
     infer = LazyInferencer(
         checkpoint=CHEKPOINTS[mission],
         batch_size=1,
         sequence_pretrained=PRETRAINED[pretrained],
     )
-    in_data = read_in_data(in_filepath = in_filepath, seq_col = seq_col, label_col = label_col)
+    in_data = read_in_data(
+        in_filepath=in_filepath, seq_col=seq_col, label_col=label_col
+    )
     result_unirna = infer.run(in_data)
     if level == "seq":
         in_data[label_col] = [item for lst in result_unirna[label_col] for item in lst]
@@ -92,6 +114,7 @@ def deeprna_infer(in_filepath: str, mission: str, pretrained: str, output_path: 
         in_data[label_col] = [lst for lst in result_unirna[label_col]]
     else:
         raise ValueError("level should be 'seq' or 'token'")
+    in_data.rename(columns={seq_col: out_seq_colname, label_col: out_label_colname})
     if output_path:
         save_dataframe(in_data, output_path)
     if return_df:

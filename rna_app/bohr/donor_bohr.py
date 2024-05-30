@@ -8,9 +8,13 @@ from dp.launching.typing import (
 from rna_app.core.donor import infer_donor
 from rna_app._version import __version__
 
+
 class LazyInferenceOptions(BaseModel):
     input_data: InputFilePath = Field(default=None, description="Config")
-    output_dir: OutputDirectory = Field(default="output", description="Output directory")
+    output_dir: OutputDirectory = Field(
+        default="output", description="Output directory"
+    )
+
 
 def main(opts: LazyInferenceOptions) -> int:
     infer_donor(

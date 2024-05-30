@@ -10,11 +10,13 @@ from dp.launching.typing import (
 )
 from rna_app.core.extract_embedding import extract_embedding
 
+
 class ModelTypeOptions(String, Enum):
     unirna_L8_E512_STEP290K_DPRNA100M = "unirna_L8_E512_STEP290K_DPRNA100M"
     unirna_L12_E768_STEP210K_DPRNA100M = "unirna_L12_E768_STEP210K_DPRNA100M"
     unirna_L16_E1024_DPRNA500M_STEP400K = "unirna_L16_E1024_DPRNA500M_STEP400K"
     unirna_L24_E1280_STEP180K_DPRNA500M = "unirna_L24_E1280_STEP180K_DPRNA500M"
+
 
 class SingleOptions(BaseModel):
     """
@@ -27,12 +29,15 @@ class SingleOptions(BaseModel):
         title="Pretrained Weights",
         description="Choose which unirna weights to use. The default is 'unirna_L16_E1024_DPRNA500M_STEP400K'.",
     )
-    output_dir: OutputDirectory = Field(default="output", description="Output directory")
+    output_dir: OutputDirectory = Field(
+        default="output", description="Output directory"
+    )
     output_attentions: Optional[bool] = Field(
         default=True,
         title="Output Attentions",
         description="Decide whether to output attentions or not. If set to True, the model will output attention weights. The default is True.",
     )
+
 
 def main(opts: SingleOptions) -> int:
     extract_embedding(

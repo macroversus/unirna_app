@@ -10,6 +10,7 @@ class LazyInferenceOptions(BaseModel):
         default="output", description="Output directory"
     )
 
+
 def main(opts: LazyInferenceOptions):
     infer_utr(
         in_filepath=opts.input_data.get_full_path(),

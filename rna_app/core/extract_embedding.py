@@ -5,14 +5,16 @@ from pathlib import Path
 from transformers import AutoTokenizer, AutoModel
 from .utils import PRETRAINED
 
-def extract_embedding(in_filepath:str, output_dir: str, pretrained: str, output_attentions: bool) -> int:
-    assert pretrained in PRETRAINED.keys(), f"pretrained {pretrained} not supported. Supported pretrained: {list(PRETRAINED.keys())}"
+
+def extract_embedding(
+    in_filepath: str, output_dir: str, pretrained: str, output_attentions: bool
+) -> int:
+    assert (
+        pretrained in PRETRAINED.keys()
+    ), f"pretrained {pretrained} not supported. Supported pretrained: {list(PRETRAINED.keys())}"
     tokenizer = AutoTokenizer.from_pretrained(PRETRAINED[pretrained])
     model = AutoModel.from_pretrained(PRETRAINED[pretrained])
-    sequences = [
-                str(i.seq)
-                for i in SeqIO.parse(in_filepath, "fasta")
-    ]
+    sequences = [str(i.seq) for i in SeqIO.parse(in_filepath, "fasta")]
     outputs = {}
     for seq in tqdm(sequences):
         token = tokenizer(seq, return_tensors="pt")
