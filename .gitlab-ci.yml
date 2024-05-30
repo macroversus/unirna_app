@@ -11,6 +11,9 @@ pytest:
     - apt install zip -y
     - pip config set global.index-url $PYPI_INDEX
     - pip install -U pip setuptools wheel
+    - eval $(ssh-agent -s)
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
     - pip install -e .
     - sh download_checkpoints.sh
   script:
