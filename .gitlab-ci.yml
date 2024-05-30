@@ -10,12 +10,11 @@ pytest:
     - apt update -y
     - apt install zip -y
     - pip config set global.index-url $PYPI_INDEX
-    - pip install -U pip
-    - sh download_checkpoints.sh
+    - pip install -U pip setuptools wheel
     - pip install -e .
-    - pytest .
+    - sh download_checkpoints.sh
   script:
-    - pytest -v --cov test/
+    - pytest -v --cov .
 
 variables:
   PYPI_INDEX: "https://pypi.tuna.tsinghua.edu.cn/simple"
