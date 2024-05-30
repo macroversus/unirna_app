@@ -11,7 +11,7 @@ from dp.launching.typing import (
     DataSet,
     Model,
 )
-from deepprotein.runners.inferencer import LazyInferencer
+from deepprotein.inference import LazyInferencer
 
 
 class LazyInferenceOptions(BaseModel):

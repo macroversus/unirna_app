@@ -1,6 +1,6 @@
 from dp.launching.cli import to_runner, default_minimal_exception_handler
 from dp.launching.typing import BaseModel, Field, InputFilePath, OutputDirectory
-from rna_app.core.utr import utr_inferencer
+from rna_app.core.utr import infer_utr
 from rna_app._version import __version__
 
 
@@ -11,8 +11,8 @@ class LazyInferenceOptions(BaseModel):
     )
 
 def main(opts: LazyInferenceOptions):
-    utr_inferencer(
-        input_data=opts.input_data.get_full_path(),
+    infer_utr(
+        in_filepath=opts.input_data.get_full_path(),
         output_dir=opts.output_dir.get_full_path(),
     )
 
