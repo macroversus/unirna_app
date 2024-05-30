@@ -11,7 +11,7 @@ def test_runner(pretrained: str):
         f"{repo_root}/rna_app/bohr/extract_embedding_bohr.py",
         "--input_data", f"{repo_root}/example/extract_embedding/input.fasta",
         "--output_dir", f"{repo_root}/example/extract_embedding/outputs/{pretrained}",
-        "--pretrained", pretrained,
+        "--pretrained", Path(pretrained).name,
     ]
     ret = subprocess.run(
         cmd,
