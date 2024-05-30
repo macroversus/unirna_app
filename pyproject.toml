@@ -1,0 +1,53 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools",
+  "setuptools-scm>=8.0.4",
+]
+
+[project]
+name = "rna_app"
+description = "Uni-RNA Apps"
+readme = "README.md"
+keywords = [
+  "Deep Learning",
+  "RNA",
+]
+license = {file = "LICENSE"}
+maintainers = [
+    {name = "Lvjun Guo", email = "guolj@dp.tech"},
+    {name = "Shizhi Ding", email = "dingshizhi@dp.tech"},
+]
+authors = [
+    {name = "Zhiyuan Chen", email = "chenzhiyuan@dp.tech"},
+    {name = "Xi Wang", email = "wangx@dp.tech"},
+    {name = "Lvjun Guo", email = "guolj@dp.tech"},
+    {name = "Shizhi Ding", email = "dingshizhi@dp.tech"},
+]
+requires-python = ">=3"
+classifiers = [
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dynamic = [
+  "version",
+]
+dependencies = [
+  "biopython",
+  "deepprotein",
+  "unirna_tf",
+]
+
+[tool.setuptools]
+packages = ["rna_app"]
+
+[tool.setuptools_scm]
+write_to = "rna_app/_version.py"
+write_to_template = "version = __version__ = {version!r}\nversion_tuple = __version_tuple__ = {version_tuple!r}\nrevision = __revision__ = {scm_version.node!r}\n"
