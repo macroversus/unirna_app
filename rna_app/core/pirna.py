@@ -1,14 +1,17 @@
+from Bio.SeqIO.FastaIO import FastaIterator
+import pandas as pd
 from .utils import deeprna_infer
 
 
-def infer_pirna(in_filepath: str, output_dir: str) -> int:
-    deeprna_infer(
-        in_filepath=in_filepath,
+def infer_pirna(in_data: str | FastaIterator | pd.DataFrame, output_dir: str, return_df: bool = False) -> pd.DataFrame | None:
+    ret = deeprna_infer(
+        in_data=in_data,
         mission="pirna",
         pretrained="L16",
         output_path=f"{output_dir}/result.csv",
         seq_col="seq",
         label_col="label",
         level="token",
+        return_df=return_df,
     )
-    return 0
+    return ret

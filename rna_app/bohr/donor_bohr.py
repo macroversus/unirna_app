@@ -18,7 +18,7 @@ class LazyInferenceOptions(BaseModel):
 
 def main(opts: LazyInferenceOptions) -> int:
     infer_donor(
-        in_filepath=opts.input_data.get_full_path(),
+        in_data=opts.input_data.get_full_path(),
         output_dir=opts.output_dir.get_full_path(),
     )
     return 0

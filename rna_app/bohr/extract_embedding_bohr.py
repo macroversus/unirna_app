@@ -41,7 +41,7 @@ class SingleOptions(BaseModel):
 
 def main(opts: SingleOptions) -> int:
     extract_embedding(
-        in_filepath=opts.input_data.get_full_path(),
+        in_data=opts.input_data.get_full_path(),
         output_dir=opts.output_dir.get_full_path(),
         pretrained=opts.pretrained.split("_")[1],
         output_attentions=opts.output_attentions,

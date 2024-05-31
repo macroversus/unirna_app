@@ -1,4 +1,6 @@
 from Bio import SeqIO
+from Bio.SeqIO.FastaIO import FastaIterator
+import pandas as pd
 from tqdm import tqdm
 import pickle
 from pathlib import Path
@@ -7,14 +9,17 @@ from .utils import PRETRAINED
 
 
 def extract_embedding(
-    in_filepath: str, output_dir: str, pretrained: str, output_attentions: bool
+    in_data: str | FastaIterator | pd.DataFrame, 
+    output_dir: str, 
+    pretrained: str, 
+    output_attentions: bool
 ) -> int:
     assert (
         pretrained in PRETRAINED.keys()
     ), f"pretrained {pretrained} not supported. Supported pretrained: {list(PRETRAINED.keys())}"
     tokenizer = AutoTokenizer.from_pretrained(PRETRAINED[pretrained])
     model = AutoModel.from_pretrained(PRETRAINED[pretrained])
-    sequences = [str(i.seq) for i in SeqIO.parse(in_filepath, "fasta")]
+    sequences = [str(i.seq) for i in SeqIO.parse(in_data, "fasta")]
     outputs = {}
     for seq in tqdm(sequences):
         token = tokenizer(seq, return_tensors="pt")

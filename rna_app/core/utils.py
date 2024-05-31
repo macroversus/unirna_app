@@ -1,5 +1,6 @@
 from pathlib import Path
 from Bio import SeqIO
+from Bio.SeqIO.FastaIO import FastaIterator
 import pandas as pd
 from typing import Optional
 from deepprotein.inference import LazyInferencer
@@ -28,12 +29,14 @@ PRETRAINED = {
 
 
 def read_in_data(
-    in_filepath: str, seq_col: str = "seq", label_col: str = "label"
+    in_data: str | FastaIterator | pd.DataFrame,
+    seq_col: str = "seq", 
+    label_col: str = "label"
 ) -> pd.DataFrame:
     """_summary_
 
     Args:
-        in_filepath (str): 输入文件路径
+        in_data (str | FastaIterator | pd.DataFrame): 输入数据，可以是文件路径，FastaIterator或者pd.DataFrame
         seq_col (str, optional): RNA序列所在列名. Defaults to "seq".
         label_col (str, optional): 训练时label所在列名. Defaults to "label".
 
@@ -47,23 +50,33 @@ def read_in_data(
         if i not in [seq_col, label_col]:
             name_colname = i
             break
-    if in_filepath.endswith(("fasta", "fa", "fna")):
+    if isinstance(in_data, str):
+        if in_data.endswith(("fasta", "fa", "fna")):
+            out = pd.DataFrame(
+                [
+                    {name_colname: i.description, seq_col: str(i.seq), label_col: 0}
+                    for i in SeqIO.parse(in_data, "fasta")
+                ]
+            )
+        elif in_data.endswith("csv"):
+            out = pd.read_csv(in_data)
+        elif in_data.endswith("tsv"):
+            out = pd.read_csv(in_data, sep="\t")
+        elif in_data.endswith("xlsx"):
+            out = pd.read_excel(in_data)
+        elif in_data.endswith("pkl"):
+            out = pd.read_pickle(in_data)
+        else:
+            raise ValueError("Input file format not supported")
+    elif isinstance(in_data, FastaIterator):
         out = pd.DataFrame(
             [
                 {name_colname: i.description, seq_col: str(i.seq), label_col: 0}
-                for i in SeqIO.parse(in_filepath, "fasta")
+                for i in in_data
             ]
         )
-    elif in_filepath.endswith("csv"):
-        out = pd.read_csv(in_filepath)
-    elif in_filepath.endswith("tsv"):
-        out = pd.read_csv(in_filepath, sep="\t")
-    elif in_filepath.endswith("xlsx"):
-        out = pd.read_excel(in_filepath)
-    elif in_filepath.endswith("pkl"):
-        out = pd.read_pickle(in_filepath)
     else:
-        raise ValueError("Input file format not supported")
+        out = in_data
     return out
 
 
@@ -82,16 +95,17 @@ def save_dataframe(df: pd.DataFrame, output_path: str):
 
 
 def deeprna_infer(
-    in_filepath: str,
+    in_data: str | FastaIterator | pd.DataFrame,
     mission: str,
     pretrained: str,
-    output_path: Optional[str] = None,
+    output_path: Optional[str | Path] = None,
     return_df: bool = False,
     seq_col: str = "seq",
     label_col: str = "label",
     level: str = "seq",
     out_seq_colname: Optional[str] = None,
     out_label_colname: Optional[str] = None,
+    **kwargs,
 ):
     assert (
         mission in CHEKPOINTS.keys()
@@ -105,7 +119,7 @@ def deeprna_infer(
         sequence_pretrained=PRETRAINED[pretrained],
     )
     in_data = read_in_data(
-        in_filepath=in_filepath, seq_col=seq_col, label_col=label_col
+        in_data=in_data, seq_col=seq_col, label_col=label_col
     )
     result_unirna = infer.run(in_data)
     if level == "seq":
