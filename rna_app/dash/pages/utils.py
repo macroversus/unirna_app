@@ -3,12 +3,8 @@ from Bio import SeqIO
 import os
 import base64
 import io
-from datetime import datetime
-from time import sleep
 from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, dash_table
-import plotly.express as px
 import dash_mantine_components as dmc
-from dash_iconify import DashIconify
 
 os.environ["REACT_VERSION"] = "18.2.0"
 

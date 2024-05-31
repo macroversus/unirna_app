@@ -4,8 +4,8 @@ from datetime import datetime
 import io
 import dash_mantine_components as dmc
 from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page
-from rna_app.pages.utils import *
-from rna_app.pages.alerts import no_input_alert, standby_alert, success_alert
+from rna_app.dash.pages.utils import *
+from rna_app.dash.pages.alerts import no_input_alert, standby_alert, success_alert
 from rna_app.core.acceptor import infer_acceptor
 from rna_app.core.donor import infer_donor
 
