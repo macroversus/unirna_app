@@ -3,12 +3,28 @@ from Bio import SeqIO
 import os
 import base64
 import io
+from datetime import datetime
 from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, dash_table
 import dash_mantine_components as dmc
+import dash_ag_grid as dag
+from rna_app.dash.collections.alerts import *
 
 os.environ["REACT_VERSION"] = "18.2.0"
 
-OUTPUT_ROOT = Path(__file__).parent.parent.parent / "rna_app_outputs"
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
+OUTPUT_DIR = PROJECT_ROOT / "rna_app_outputs"
+EXAMPLE_DIR = PROJECT_ROOT / "example"
+
+example_fastas = {
+    "acceptor": str(EXAMPLE_DIR / "acceptor" / "input.fasta"),
+    "donor": str(EXAMPLE_DIR / "donor" / "input.fasta"),
+    "utr": str(EXAMPLE_DIR / "utr" / "input.fasta"),
+    "m6a": str(EXAMPLE_DIR / "m6a" / "input.fasta"),
+    "ss": str(EXAMPLE_DIR / "unirna_ss" / "input.fasta"),
+    "pirna": str(EXAMPLE_DIR / "pirna" / "input.fasta"),
+    "lncrna_sublocalization": str(EXAMPLE_DIR / "lncrna_sublocalization" / "input.fasta"),
+    "extract_embedding": str(EXAMPLE_DIR / "extract_embedding" / "input.fasta"),
+}
 
 upload_fasta = dcc.Upload(
     id="upload-fasta",
@@ -22,6 +38,7 @@ upload_fasta = dcc.Upload(
                 "borderWidth": "0px",
                 "fullWidth": True,
             },
+            leftSection=DashIconify(icon="line-md:upload-outline-loop"),
         ),
         dmc.Text("Max file size: 1MB"),
     ],
@@ -45,57 +62,40 @@ fasta_textarea = dmc.Textarea(
     maxRows=16,
 )
 
-start_button = dmc.Button(
-    id="start-button",
-    children="Start Inference",
-    radius="md",
-    style={
-        "margin": "10px",
-    },
-    loaderProps={"type": "dots"}, 
-    loading=False,
-)
-
 status = dmc.Container(
     id="status",
 )
 
-output_table = dash_table.DataTable(
-        id='result-table',
-        columns=[],
-        data=[],
-        editable=False,
-        sort_action="native",
-        sort_mode="multi",
-        page_action="native",
-        page_size= 10,
-        style_data={
-            'color': 'black',
-            'backgroundColor': 'white'
-        },
-        style_data_conditional=[
-            {
-                'if': {'row_index': 'odd'},
-                'backgroundColor': 'rgb(220, 220, 220)',
-            }
-        ],
-        export_format=None,
+ag_table = dag.AgGrid(
+    id="result-table",
+    columnSize="sizeToFit",
+    columnDefs=[],
+    rowData=[],
+    csvExportParams=None,
 )
-
-clientside_callback(
-    """
-    function updateLoadingState(n_clicks) {
-        return true
-    }
-    """,
-    Output("start-button", "loading", allow_duplicate=True),
-    Input("start-button", "n_clicks"),
-    prevent_initial_call=True,
+output_table = html.Div(
+    id="output-table",
+    children=[
+        dmc.Button("Export to CSV", id="export-csv", n_clicks=0),
+        ag_table,
+    ],
+    style={
+        "margin": "auto",
+    },
+    hidden=True,
 )
-
 
 @callback(
-    Output("fasta-text", "value"),
+    Output("result-table", "exportDataAsCsv"),
+    Input("export-csv", "n_clicks"),
+)
+def export_csv(n_clicks):
+    if n_clicks:
+        return True
+    return False
+
+@callback(
+    Output("fasta-text", "value", allow_duplicate=True),
     Output("upload-fasta", "contents"),
     Input("upload-fasta", "contents"),
     Input("upload-fasta", "last_modified"),
@@ -112,3 +112,15 @@ def load_from_fasta_file(contents, last_modified):
         for record in SeqIO.parse(io.StringIO(decoded.decode()), "fasta"):
             fasta_text = f"{fasta_text}>{record.id}\n{record.seq}\n"
     return fasta_text, None
+
+@callback(
+    Output("status", "children", allow_duplicate=True),
+    Input("fasta-text", "value"),
+    prevent_initial_call=True,
+)
+def check_fasta_text(fasta_text: str):
+    print(datetime.now())
+    if fasta_text:
+        return standby_alert
+    else:
+        return no_input_alert

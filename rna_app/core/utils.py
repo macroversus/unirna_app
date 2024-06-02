@@ -1,4 +1,5 @@
 from pathlib import Path
+import torch
 from Bio import SeqIO
 from Bio.SeqIO.FastaIO import FastaIterator
 import pandas as pd
@@ -128,6 +129,7 @@ def deeprna_infer(
         in_data[label_col] = [lst for lst in result_unirna[label_col]]
     else:
         raise ValueError("level should be 'seq' or 'token'")
+    torch.cuda.empty_cache()
     in_data.rename(columns={seq_col: out_seq_colname, label_col: out_label_colname})
     if output_path:
         save_dataframe(in_data, output_path)
