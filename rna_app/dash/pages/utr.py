@@ -8,12 +8,10 @@ from uuid import uuid4
 from tempfile import TemporaryDirectory
 import subprocess
 from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, State
-from dash.exceptions import PreventUpdate
 from rna_app.dash.collections.utils import *
 from rna_app.dash.collections.alerts import no_input_alert, standby_alert, success_alert, fail_alert
-from rna_app.core.utr import infer_utr
 
-register_page(__name__)
+register_page(__name__, name="5' UTR Mean Ribosomal Load Prediction", path="/utr")
 
 start_button_utr = dmc.Grid(
     children=[
@@ -43,7 +41,7 @@ fetch_example_utr = dmc.Button(
     leftSection=DashIconify(icon="line-md:compass-twotone-loop"),
 )
 
-urt_fasta_input = dmc.Grid(
+utr_fasta_input = dmc.Grid(
     children=[
         dmc.GridCol(fasta_textarea, span="10"),
         dmc.GridCol(fetch_example_utr, span="2"),
@@ -85,7 +83,6 @@ clientside_callback(
     prevent_initial_call=True,
 )
 def start_infer_utr(loading: bool, fasta_text: str):
-    print(datetime.now(), "utr")
     if not fasta_text:
         return False, [], [], None, True, no_input_alert
     if loading:
@@ -116,7 +113,7 @@ layout = [
         children = dmc.Container(
             children = [
                 upload_fasta,
-                urt_fasta_input,
+                utr_fasta_input,
                 start_button_utr,
                 output_table,
             ],

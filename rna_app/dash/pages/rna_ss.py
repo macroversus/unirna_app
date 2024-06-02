@@ -8,17 +8,16 @@ from uuid import uuid4
 from tempfile import TemporaryDirectory
 import subprocess
 from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, State
-from dash.exceptions import PreventUpdate
 from rna_app.dash.collections.utils import *
 from rna_app.dash.collections.alerts import no_input_alert, standby_alert, success_alert, fail_alert
 
-register_page(__name__, name="m6A Modification Prediction", path="/m6a")
+register_page(__name__, name="RNA Secondary Structure Prediction", path="/rna_ss")
 
-start_button_m6a = dmc.Grid(
+start_button_rna_ss = dmc.Grid(
     children=[
         dmc.GridCol(
         dmc.Button(
-            id="start-button-m6a",
+            id="start-button-rna_ss",
             children="Start Inference",
             radius="md",
             style={
@@ -36,30 +35,57 @@ start_button_m6a = dmc.Grid(
     align="flex-start",
 )
 
-fetch_example_m6a = dmc.Button(
-    id="fetch-example-m6a",
+fetch_example_rna_ss = dmc.Button(
+    id="fetch-example-rna_ss",
     children="Use Example",
     leftSection=DashIconify(icon="line-md:compass-twotone-loop"),
 )
 
-m6a_fasta_input = dmc.Grid(
+rna_ss_fasta_input = dmc.Grid(
     children=[
         dmc.GridCol(fasta_textarea, span="10"),
-        dmc.GridCol(fetch_example_m6a, span="2"),
+        dmc.GridCol(fetch_example_rna_ss, span="2"),
     ],
     align="flex-end",
 )
 
 @callback(
     Output("fasta-text", "value", allow_duplicate=True),
-    Input("fetch-example-m6a", "n_clicks"),
+    Input("fetch-example-rna_ss", "n_clicks"),
     prevent_initial_call=True,
 )
-def fetch_example_m6a(n_clicks):
+def fetch_example_rna_ss(n_clicks):
     fasta_text = ""
-    for record in SeqIO.parse(example_fastas["m6a"], "fasta"):
+    for record in SeqIO.parse(example_fastas["rna_ss"], "fasta"):
         fasta_text = f"{fasta_text}>{record.id}\n{record.seq}\n"
     return fasta_text
+
+model_type = dmc.Select(
+    label="Model Type",
+    placeholder="Select one",
+    id="model-type",
+    value="unirna",
+    data=[
+        {"value": "unirna", "label": "Type-1", },
+        {"value": "archiveii", "label": "Type-2", },
+    ],
+    allowDeselect=False,
+)
+    
+model_type_selection = dmc.Grid(
+    children=[
+        dmc.GridCol(model_type, span="2"),
+        dmc.GridCol(dmc.Alert(id="model-type-description", color="blue"), span="10"),
+    ],
+    align="center",
+)
+
+@callback(Output("model-type-description", "children"), Input("model-type", "value"))
+def select_value(value):
+    if value == "unirna":
+        return "Trained on the Uni-RNA 50% threshold secondary structure dataset"
+    else:
+        return "Trained on the MXfold2 (RNAStralign) dataset"
 
 clientside_callback(
     """
@@ -67,23 +93,23 @@ clientside_callback(
         return true
     }
     """,
-    Output("start-button-m6a", "loading", allow_duplicate=True),
-    Input("start-button-m6a", "n_clicks"),
+    Output("start-button-rna_ss", "loading", allow_duplicate=True),
+    Input("start-button-rna_ss", "n_clicks"),
     prevent_initial_call=True,
 )
 
 @callback(
-    Output("start-button-m6a", "loading", allow_duplicate=True),
+    Output("start-button-rna_ss", "loading", allow_duplicate=True),
     Output("result-table", "rowData", allow_duplicate=True),
     Output("result-table", "columnDefs", allow_duplicate=True),
     Output("result-table", "csvExportParams", allow_duplicate=True),
     Output("output-table", "hidden", allow_duplicate=True),
     Output("status", "children", allow_duplicate=True),
-    Input("start-button-m6a", "loading"),
+    Input("start-button-rna_ss", "loading"),
     State("fasta-text", "value"),
     prevent_initial_call=True,
 )
-def start_infer_m6a(loading: bool, fasta_text: str):
+def start_infer_rna_ss(loading: bool, fasta_text: str):
     if not fasta_text:
         return False, [], [], None, True, no_input_alert
     if loading:
@@ -97,25 +123,26 @@ def start_infer_m6a(loading: bool, fasta_text: str):
                     [
                         "rna_app_infer",
                         "--in_data", in_fasta,
-                        "--mission", "m6a",
+                        "--mission", "rna_ss",
                         "--output_dir", temp_dir,
                     ]
                 )
                 assert process_ret.returncode == 0, "Inference failed"
                 ret = pd.read_csv(f"{temp_dir}/result.csv")
-            return False, ret.to_dict("records"), [{"field": i} for i in ret.columns], {"fileName": f"m6a_results_{now}.csv"}, False, success_alert
+            return False, ret.to_dict("records"), [{"field": i} for i in ret.columns], {"fileName": f"rna_ss_results_{now}.csv"}, False, success_alert
         except Exception as e:
             return False, [], [], None, True, [fail_alert, f"Error: {e}"]
 
 layout = [
-    html.Div(children="m6A Modification Prediction", style={"textAlign": "center", "fontSize": 30}),
+    html.Div(children="RNA Secondary Structure Prediction", style={"textAlign": "center", "fontSize": 30}),
     html.Hr(),
     dmc.MantineProvider(
         children = dmc.Container(
             children = [
                 upload_fasta,
-                m6a_fasta_input,
-                start_button_m6a,
+                model_type_selection,
+                rna_ss_fasta_input,
+                start_button_rna_ss,
                 output_table,
             ],
         ),

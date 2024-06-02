@@ -20,7 +20,7 @@ example_fastas = {
     "donor": str(EXAMPLE_DIR / "donor" / "input.fasta"),
     "utr": str(EXAMPLE_DIR / "utr" / "input.fasta"),
     "m6a": str(EXAMPLE_DIR / "m6a" / "input.fasta"),
-    "ss": str(EXAMPLE_DIR / "unirna_ss" / "input.fasta"),
+    "rna_ss": str(EXAMPLE_DIR / "unirna_ss" / "input.fasta"),
     "pirna": str(EXAMPLE_DIR / "pirna" / "input.fasta"),
     "lncrna_sublocalization": str(EXAMPLE_DIR / "lncrna_sublocalization" / "input.fasta"),
     "extract_embedding": str(EXAMPLE_DIR / "extract_embedding" / "input.fasta"),
@@ -80,7 +80,7 @@ output_table = html.Div(
         ag_table,
     ],
     style={
-        "margin": "auto",
+        "marginBottom": "50px",
     },
     hidden=True,
 )

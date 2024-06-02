@@ -10,10 +10,8 @@ import subprocess
 from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, State
 from rna_app.dash.collections.utils import *
 from rna_app.dash.collections.alerts import no_input_alert, standby_alert, success_alert, fail_alert
-from rna_app.core.acceptor import infer_acceptor
-from rna_app.core.donor import infer_donor
 
-register_page(__name__)
+register_page(__name__, name="Splice Site Prediction", path="/splice_site")
 
 acceptor_or_donor = dmc.RadioGroup(
     id="splice-type",
@@ -59,7 +57,7 @@ fetch_example_splicesite = dmc.Button(
     leftSection=DashIconify(icon="line-md:compass-twotone-loop"),
 )
 
-urt_fasta_input = dmc.Grid(
+splicesite_fasta_input = dmc.Grid(
     children=[
         dmc.GridCol(fasta_textarea, span="10"),
         dmc.GridCol(fetch_example_splicesite, span="2"),
@@ -115,7 +113,6 @@ clientside_callback(
     prevent_initial_call=True,
 )
 def start_infer_splicesite(loading: bool, splice_type: str, fasta_text: str):
-    print(datetime.now(), "splice_type:", splice_type)
     if not fasta_text:
         return False, [], [], None, False, True, no_input_alert
     if loading:
@@ -143,13 +140,13 @@ def start_infer_splicesite(loading: bool, splice_type: str, fasta_text: str):
         return False, [], [], None, False, True, standby_alert
 
 layout = [
-    html.Div(children="Splice Site", style={"textAlign": "center", "fontSize": 30}),
+    html.Div(children="Splice Site Prediction", style={"textAlign": "center", "fontSize": 30}),
     html.Hr(),
     dmc.MantineProvider(
         children = dmc.Container(
             children = [
                 upload_fasta,
-                urt_fasta_input,
+                splicesite_fasta_input,
                 dmc.MantineProvider(acceptor_or_donor),
                 start_button_splicesite,
                 output_table,
