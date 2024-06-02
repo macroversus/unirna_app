@@ -5,6 +5,8 @@ import io
 import dash_mantine_components as dmc
 from datetime import datetime
 from uuid import uuid4
+from tempfile import TemporaryDirectory
+import subprocess
 from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, State
 from dash.exceptions import PreventUpdate
 from rna_app.dash.collections.utils import *
@@ -89,9 +91,20 @@ def start_infer_utr(loading: bool, fasta_text: str):
     if loading:
         try:
             now = datetime.now().strftime('%Y%m%d_%H%M%S')
-            parser = SeqIO.parse(io.StringIO(fasta_text), "fasta")
-            output_dir = OUTPUT_DIR / "utr" / f"{now}-{uuid4()}"
-            ret: pd.DataFrame = infer_utr(parser, output_dir, return_df=True) 
+            with TemporaryDirectory() as temp_dir:
+                in_fasta = f"{temp_dir}/input.fasta"
+                with open(in_fasta, "w") as f:
+                    f.write(fasta_text)
+                process_ret = subprocess.run(
+                    [
+                        "rna_app_infer",
+                        "--in_data", in_fasta,
+                        "--mission", "utr",
+                        "--output_dir", temp_dir,
+                    ]
+                )
+                assert process_ret.returncode == 0, "Inference failed"
+                ret = pd.read_csv(f"{temp_dir}/result.csv")
             return False, ret.to_dict("records"), [{"field": i} for i in ret.columns], {"fileName": f"utr_results_{now}.csv"}, False, success_alert
         except Exception as e:
             return False, [], [], None, True, [fail_alert, f"Error: {e}"]

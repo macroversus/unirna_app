@@ -5,6 +5,8 @@ import io
 import dash_mantine_components as dmc
 from datetime import datetime
 from uuid import uuid4
+from tempfile import TemporaryDirectory
+import subprocess
 from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, State
 from rna_app.dash.collections.utils import *
 from rna_app.dash.collections.alerts import no_input_alert, standby_alert, success_alert, fail_alert
@@ -119,14 +121,21 @@ def start_infer_splicesite(loading: bool, splice_type: str, fasta_text: str):
     if loading:
         try:
             now = datetime.now().strftime('%Y%m%d_%H%M%S')
-            parser = SeqIO.parse(io.StringIO(fasta_text), "fasta")
-            output_dir = OUTPUT_DIR / splice_type / f"{now}-{uuid4()}"
-            if splice_type == "acceptor":
-                ret: pd.DataFrame = infer_acceptor(parser, output_dir, return_df=True) 
-            elif splice_type == "donor":
-                ret: pd.DataFrame = infer_donor(parser, output_dir, return_df=True)
-            else:
-                raise ValueError("Invalid splice type")
+            with TemporaryDirectory() as temp_dir:
+                in_fasta = f"{temp_dir}/input.fasta"
+                outfile = f"{temp_dir}/result.csv"
+                with open(in_fasta, "w") as f:
+                    f.write(fasta_text)
+                process_ret = subprocess.run(
+                    [
+                        "rna_app_infer",
+                        "--in_data", in_fasta,
+                        "--mission", splice_type,
+                        "--output_dir", temp_dir,
+                    ]
+                )
+                assert process_ret.returncode == 0, "Inference failed"
+                ret = pd.read_csv(outfile)
             return False, ret.to_dict("records"), [{"field": i} for i in ret.columns], {"fileName": f"{splice_type}_results_{now}.csv"}, False, False, success_alert
         except Exception as e:
             return False, [], [], None, False, True, [f"Error: {e}", fail_alert]

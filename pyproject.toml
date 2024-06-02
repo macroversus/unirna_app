@@ -24,14 +24,13 @@ authors = [
     {name = "Lvjun Guo", email = "guolj@dp.tech"},
     {name = "Shizhi Ding", email = "dingshizhi@dp.tech"},
 ]
-requires-python = ">=3"
+requires-python = ">=3.10"
 classifiers = [
   "Intended Audience :: Developers",
   "Intended Audience :: Education",
   "Intended Audience :: Science/Research",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -50,6 +49,9 @@ dependencies = [
   "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
   "unirna_tf@git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
 ]
+
+[project.scripts]
+rna_app_infer = "rna_app.run_infer:main"
 
 [tool.setuptools]
 packages = ["rna_app"]
