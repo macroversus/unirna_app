@@ -130,7 +130,10 @@ def deeprna_infer(
     else:
         raise ValueError("level should be 'seq' or 'token'")
     torch.cuda.empty_cache()
-    in_data.rename(columns={seq_col: out_seq_colname, label_col: out_label_colname})
+    if out_seq_colname:
+        in_data.rename(columns={seq_col: out_seq_colname}, inplace=True)
+    if out_label_colname:
+        in_data.rename(columns={label_col: out_label_colname}, inplace=True)
     if output_path:
         save_dataframe(in_data, output_path)
     if return_df:
