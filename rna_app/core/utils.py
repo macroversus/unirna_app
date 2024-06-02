@@ -65,8 +65,6 @@ def read_in_data(
             out = pd.read_csv(in_data, sep="\t")
         elif in_data.endswith("xlsx"):
             out = pd.read_excel(in_data)
-        elif in_data.endswith("pkl"):
-            out = pd.read_pickle(in_data)
         else:
             raise ValueError("Input file format not supported")
     elif isinstance(in_data, FastaIterator):
