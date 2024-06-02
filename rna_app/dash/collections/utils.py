@@ -4,7 +4,17 @@ import os
 import base64
 import io
 from datetime import datetime
-from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, dash_table
+from dash import (
+    Dash,
+    html,
+    dcc,
+    callback,
+    Output,
+    Input,
+    clientside_callback,
+    register_page,
+    dash_table,
+)
 import dash_mantine_components as dmc
 import dash_ag_grid as dag
 from rna_app.dash.collections.alerts import *
@@ -22,7 +32,9 @@ example_fastas = {
     "m6a": str(EXAMPLE_DIR / "m6a" / "input.fasta"),
     "rna_ss": str(EXAMPLE_DIR / "unirna_ss" / "input.fasta"),
     "pirna": str(EXAMPLE_DIR / "pirna" / "input.fasta"),
-    "lncrna_sublocalization": str(EXAMPLE_DIR / "lncrna_sublocalization" / "input.fasta"),
+    "lncrna_sublocalization": str(
+        EXAMPLE_DIR / "lncrna_sublocalization" / "input.fasta"
+    ),
     "extract_embedding": str(EXAMPLE_DIR / "extract_embedding" / "input.fasta"),
 }
 
@@ -40,9 +52,9 @@ upload_fasta = dcc.Upload(
             },
             leftSection=DashIconify(icon="line-md:upload-outline-loop"),
         ),
-        dmc.Text("Max file size: 1MB"),
+        dmc.Text("Max file size: 1 MB"),
     ],
-    max_size=1e6,
+    max_size=1048576,
     multiple=True,
     style={
         "lineHeight": "60px",
@@ -85,6 +97,7 @@ output_table = html.Div(
     hidden=True,
 )
 
+
 @callback(
     Output("result-table", "exportDataAsCsv"),
     Input("export-csv", "n_clicks"),
@@ -97,6 +110,7 @@ def export_csv(n_clicks):
 @callback(
     Output("fasta-text", "value", allow_duplicate=True),
     Output("upload-fasta", "contents"),
+    Output("status", "children", allow_duplicate=True),
     Input("upload-fasta", "contents"),
     Input("upload-fasta", "last_modified"),
     prevent_initial_call=True,
@@ -107,11 +121,12 @@ def load_from_fasta_file(contents, last_modified):
         return ""
     fasta_text = ""
     for content in contents:
-        _, content_string = content.split(',')
+        _, content_string = content.split(",")
         decoded = base64.b64decode(content_string)
         for record in SeqIO.parse(io.StringIO(decoded.decode()), "fasta"):
-            fasta_text = f"{fasta_text}>{record.id}\n{record.seq}\n"
-    return fasta_text, None
+            fasta_text = f"{fasta_text}>{record.description}\n{record.seq}\n"
+    return fasta_text, None, standby_alert
+
 
 @callback(
     Output("status", "children", allow_duplicate=True),
@@ -121,6 +136,16 @@ def load_from_fasta_file(contents, last_modified):
 def check_fasta_text(fasta_text: str):
     print(datetime.now())
     if fasta_text:
+        seq_names = []
+        for record in SeqIO.parse(io.StringIO(fasta_text), "fasta"):
+            seq_name = record.description
+            if seq_name in seq_names:
+                return (
+                    "",
+                    None,
+                    duplicated_name_alert
+                )
+            seq_names.append(seq_name)
         return standby_alert
     else:
         return no_input_alert

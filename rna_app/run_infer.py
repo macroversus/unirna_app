@@ -1,6 +1,3 @@
-
-
-
 # def deeprna_infer(
 #     in_data: str | FastaIterator | pd.DataFrame,
 #     mission: str,
@@ -15,6 +12,7 @@
 #     **kwargs,
 # ):
 
+
 def main():
     from argparse import ArgumentParser
     from rna_app.core.acceptor import infer_acceptor
@@ -25,14 +23,48 @@ def main():
     from rna_app.core.utr import infer_utr
     from rna_app.core.rna_ss import infer_ss
     from rna_app.core.extract_embedding import extract_embedding
+
     # 当前deeprna存在显存泄漏问题，暂无法通过任何方式解决，因此调用额外的脚本来进行推理
     parser = ArgumentParser()
-    parser.add_argument("--in_data", type=str, required=True, help="Input data file path")
-    parser.add_argument("--mission", type=str, required=True, help="Mission name", choices=["rna_ss", "extract_embedding", "acceptor", "donor", "lncrna_sublocalization", "m6a", "pirna", "utr"])
-    parser.add_argument("--output_dir", type=str, required=True, help="Output directory")
-    parser.add_argument("--model_type", type=str, default="unirna", help="Model type. Only for ss")
-    parser.add_argument("--pretrained", type=str, default="L16", help="Pretrained model name. Only for extract_embedding")
-    parser.add_argument("--output_attentions", action="store_true", help="Output attentions. Only for extract_embedding")
+    parser.add_argument(
+        "--in_data", type=str, required=True, help="Input data file path"
+    )
+    parser.add_argument(
+        "--mission",
+        type=str,
+        required=True,
+        help="Mission name",
+        choices=[
+            "rna_ss",
+            "extract_embedding",
+            "acceptor",
+            "donor",
+            "lncrna_sublocalization",
+            "m6a",
+            "pirna",
+            "utr",
+        ],
+    )
+    parser.add_argument(
+        "--output_dir", type=str, required=True, help="Output directory"
+    )
+    parser.add_argument(
+        "--model_type", type=str, default="unirna", help="Model type. Only for ss"
+    )
+    parser.add_argument(
+        "--keep_prob", action="store_true", help="Keep probability. Only for ss"
+    )
+    parser.add_argument(
+        "--pretrained",
+        type=str,
+        default="L16",
+        help="Pretrained model name. Only for extract_embedding",
+    )
+    parser.add_argument(
+        "--output_attentions",
+        action="store_true",
+        help="Output attentions. Only for extract_embedding",
+    )
     args = parser.parse_args()
     match args.mission:
         case "rna_ss":
@@ -55,15 +87,3 @@ def main():
                 output_dir=args.output_dir,
                 return_df=False,
             )
-        # deeprna_infer(
-        #     in_data=args.in_data,
-        #     mission=args.mission,
-        #     pretrained=args.pretrained,
-        #     output_path=f"{args.output_dir}/result.csv",
-        #     return_df=False,
-        #     seq_col=args.seq_col,
-        #     label_col=args.label_col,
-        #     level=args.level,
-        #     out_seq_colname=args.out_seq_colname,
-        #     out_label_colname=args.out_label_colname,
-        # )

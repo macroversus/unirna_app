@@ -31,14 +31,14 @@ PRETRAINED = {
 
 def read_in_data(
     in_data: str | FastaIterator | pd.DataFrame,
-    seq_col: str = "seq", 
-    label_col: str = "label"
+    seq_col: str = "seq",
+    label_col: str = "label",
 ) -> pd.DataFrame:
     """_summary_
 
     Args:
         in_data (str | FastaIterator | pd.DataFrame): 输入数据，可以是文件路径，FastaIterator或者pd.DataFrame
-        seq_col (str, optional): RNA序列所在列名. Defaults to "seq".
+        seq_col (str, optional): RNA序列所在列名. Defaults to "seq". 不可用"name"
         label_col (str, optional): 训练时label所在列名. Defaults to "label".
 
     Raises:
@@ -47,15 +47,11 @@ def read_in_data(
     Returns:
         pd.DataFrame: 可用于deeprna推理的DataFrame
     """
-    for i in ["name", "description", "id"]:
-        if i not in [seq_col, label_col]:
-            name_colname = i
-            break
     if isinstance(in_data, str):
         if in_data.endswith(("fasta", "fa", "fna")):
             out = pd.DataFrame(
                 [
-                    {name_colname: i.description, seq_col: str(i.seq), label_col: 0}
+                    {"name": i.description, seq_col: str(i.seq), label_col: 0}
                     for i in SeqIO.parse(in_data, "fasta")
                 ]
             )
@@ -70,7 +66,7 @@ def read_in_data(
     elif isinstance(in_data, FastaIterator):
         out = pd.DataFrame(
             [
-                {name_colname: i.description, seq_col: str(i.seq), label_col: 0}
+                {"name": i.description, seq_col: str(i.seq), label_col: 0}
                 for i in in_data
             ]
         )
@@ -117,9 +113,7 @@ def deeprna_infer(
         batch_size=1,
         sequence_pretrained=PRETRAINED[pretrained],
     )
-    in_data = read_in_data(
-        in_data=in_data, seq_col=seq_col, label_col=label_col
-    )
+    in_data = read_in_data(in_data=in_data, seq_col=seq_col, label_col=label_col)
     result_unirna = infer.run(in_data)
     if level == "seq":
         in_data[label_col] = [item for lst in result_unirna[label_col] for item in lst]

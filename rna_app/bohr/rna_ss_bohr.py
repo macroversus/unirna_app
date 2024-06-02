@@ -35,9 +35,9 @@ def main(opts: LazyInferenceOptions):
     infer_ss(
         in_data=opts.input_data.get_full_path(),
         output_dir=opts.output_dir.get_full_path(),
-        model_type="unirna"
-        if opts.model_type == ModelTypeOptions.unirna
-        else "archiveii",
+        model_type=(
+            "unirna" if opts.model_type == ModelTypeOptions.unirna else "archiveii"
+        ),
     )
 
 

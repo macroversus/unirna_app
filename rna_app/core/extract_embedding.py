@@ -9,10 +9,10 @@ from .utils import PRETRAINED
 
 
 def extract_embedding(
-    in_data: str | FastaIterator | pd.DataFrame, 
-    output_dir: str, 
-    pretrained: str, 
-    output_attentions: bool
+    in_data: str | FastaIterator | pd.DataFrame,
+    output_dir: str,
+    pretrained: str,
+    output_attentions: bool,
 ) -> int:
     assert (
         pretrained in PRETRAINED.keys()

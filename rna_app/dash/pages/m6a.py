@@ -1,35 +1,49 @@
 import pandas as pd
 from Bio import SeqIO
 from datetime import datetime
-import io
 import dash_mantine_components as dmc
 from datetime import datetime
 from uuid import uuid4
 from tempfile import TemporaryDirectory
 import subprocess
-from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, State
+from dash import (
+    Dash,
+    html,
+    dcc,
+    callback,
+    Output,
+    Input,
+    clientside_callback,
+    register_page,
+    State,
+)
 from dash.exceptions import PreventUpdate
 from rna_app.dash.collections.utils import *
-from rna_app.dash.collections.alerts import no_input_alert, standby_alert, success_alert, fail_alert
+from rna_app.dash.collections.alerts import (
+    no_input_alert,
+    standby_alert,
+    success_alert,
+    fail_alert,
+)
 
 register_page(__name__, name="m6A Modification Prediction", path="/m6a")
 
 start_button_m6a = dmc.Grid(
     children=[
         dmc.GridCol(
-        dmc.Button(
-            id="start-button-m6a",
-            children="Start Inference",
-            radius="md",
-            style={
-                "marginTop": "10px",
-                "marginBottom": "10px",
-            },
-            loaderProps={"type": "dots"}, 
-            loading=False,
-            leftSection=DashIconify(icon="line-md:play-twotone"),
-        ),
-        span="2"
+            dmc.Button(
+                id="start-button-m6a",
+                children="Start Inference",
+                radius="md",
+                style={
+                    "marginTop": "10px",
+                    "marginBottom": "10px",
+                },
+                loaderProps={"type": "dots"},
+                loading=False,
+                leftSection=DashIconify(icon="line-md:play-twotone"),
+            ),
+            span="2",
         ),
         dmc.GridCol(status, span="10"),
     ],
@@ -50,6 +64,7 @@ m6a_fasta_input = dmc.Grid(
     align="flex-end",
 )
 
+
 @callback(
     Output("fasta-text", "value", allow_duplicate=True),
     Input("fetch-example-m6a", "n_clicks"),
@@ -61,6 +76,7 @@ def fetch_example_m6a(n_clicks):
         fasta_text = f"{fasta_text}>{record.id}\n{record.seq}\n"
     return fasta_text
 
+
 clientside_callback(
     """
     function updateLoadingState(n_clicks) {
@@ -71,6 +87,7 @@ clientside_callback(
     Input("start-button-m6a", "n_clicks"),
     prevent_initial_call=True,
 )
+
 
 @callback(
     Output("start-button-m6a", "loading", allow_duplicate=True),
@@ -88,7 +105,7 @@ def start_infer_m6a(loading: bool, fasta_text: str):
         return False, [], [], None, True, no_input_alert
     if loading:
         try:
-            now = datetime.now().strftime('%Y%m%d_%H%M%S')
+            now = datetime.now().strftime("%Y%m%d_%H%M%S")
             with TemporaryDirectory() as temp_dir:
                 in_fasta = f"{temp_dir}/input.fasta"
                 with open(in_fasta, "w") as f:
@@ -96,23 +113,37 @@ def start_infer_m6a(loading: bool, fasta_text: str):
                 process_ret = subprocess.run(
                     [
                         "rna_app_infer",
-                        "--in_data", in_fasta,
-                        "--mission", "m6a",
-                        "--output_dir", temp_dir,
+                        "--in_data",
+                        in_fasta,
+                        "--mission",
+                        "m6a",
+                        "--output_dir",
+                        temp_dir,
                     ]
                 )
                 assert process_ret.returncode == 0, "Inference failed"
                 ret = pd.read_csv(f"{temp_dir}/result.csv")
-            return False, ret.to_dict("records"), [{"field": i} for i in ret.columns], {"fileName": f"m6a_results_{now}.csv"}, False, success_alert
+            return (
+                False,
+                ret.to_dict("records"),
+                [{"field": i} for i in ret.columns],
+                {"fileName": f"m6a_results_{now}.csv"},
+                False,
+                success_alert,
+            )
         except Exception as e:
             return False, [], [], None, True, [fail_alert, f"Error: {e}"]
 
+
 layout = [
-    html.Div(children="m6A Modification Prediction", style={"textAlign": "center", "fontSize": 30}),
+    html.Div(
+        children="m6A Modification Prediction",
+        style={"textAlign": "center", "fontSize": 30},
+    ),
     html.Hr(),
     dmc.MantineProvider(
-        children = dmc.Container(
-            children = [
+        children=dmc.Container(
+            children=[
                 upload_fasta,
                 m6a_fasta_input,
                 start_button_m6a,

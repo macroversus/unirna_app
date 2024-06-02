@@ -20,9 +20,11 @@ def test_runner(mission):
                 "--output_dir",
                 f"{repo_root}/example/unirna_ss/outputs/{mission}",
                 "--model_type",
-                ModelTypeOptions.unirna
-                if mission == "ss_unirna"
-                else ModelTypeOptions.archiveii,
+                (
+                    ModelTypeOptions.unirna
+                    if mission == "ss_unirna"
+                    else ModelTypeOptions.archiveii
+                ),
             ]
         )
     else:

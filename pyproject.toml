@@ -41,11 +41,17 @@ dynamic = [
 dependencies = [
   "biopython",
   "dp-launching-sdk",
-  "setuptools_scm",
+  "setuptools-scm",
   "pytest",
   "pytest-cov",
   "dash",
   "plotly",
+  "gunicorn",
+  "dash-mantine-components",
+  "dash-ag-grid",
+  "dash-iconify",
+  "dash-auth",
+  "dash-bio",
   "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
   "unirna_tf@git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
 ]

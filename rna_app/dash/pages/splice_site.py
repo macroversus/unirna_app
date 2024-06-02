@@ -1,15 +1,29 @@
 import pandas as pd
 from Bio import SeqIO
 from datetime import datetime
-import io
 import dash_mantine_components as dmc
 from datetime import datetime
 from uuid import uuid4
 from tempfile import TemporaryDirectory
 import subprocess
-from dash import Dash, html, dcc, callback, Output, Input, clientside_callback, register_page, State
+from dash import (
+    Dash,
+    html,
+    dcc,
+    callback,
+    Output,
+    Input,
+    clientside_callback,
+    register_page,
+    State,
+)
 from rna_app.dash.collections.utils import *
-from rna_app.dash.collections.alerts import no_input_alert, standby_alert, success_alert, fail_alert
+from rna_app.dash.collections.alerts import (
+    no_input_alert,
+    standby_alert,
+    success_alert,
+    fail_alert,
+)
 
 register_page(__name__, name="Splice Site Prediction", path="/splice_site")
 
@@ -32,19 +46,19 @@ acceptor_or_donor = dmc.RadioGroup(
 start_button_splicesite = dmc.Grid(
     children=[
         dmc.GridCol(
-        dmc.Button(
-            id="start-button-splicesite",
-            children="Start Inference",
-            radius="md",
-            style={
-                "marginTop": "10px",
-                "marginBottom": "10px",
-            },
-            loaderProps={"type": "dots"}, 
-            loading=False,
-            leftSection=DashIconify(icon="line-md:play-twotone"),
-        ),
-        span="2"
+            dmc.Button(
+                id="start-button-splicesite",
+                children="Start Inference",
+                radius="md",
+                style={
+                    "marginTop": "10px",
+                    "marginBottom": "10px",
+                },
+                loaderProps={"type": "dots"},
+                loading=False,
+                leftSection=DashIconify(icon="line-md:play-twotone"),
+            ),
+            span="2",
         ),
         dmc.GridCol(status, span="10"),
     ],
@@ -65,6 +79,7 @@ splicesite_fasta_input = dmc.Grid(
     align="flex-end",
 )
 
+
 @callback(
     Output("fasta-text", "value", allow_duplicate=True),
     Input("fetch-example-splicesite", "n_clicks"),
@@ -76,6 +91,7 @@ def fetch_example_splicesite(n_clicks, splice_type):
     for record in SeqIO.parse(example_fastas[splice_type], "fasta"):
         fasta_text = f"{fasta_text}>{record.id}\n{record.seq}\n"
     return fasta_text
+
 
 clientside_callback(
     """
@@ -98,6 +114,7 @@ clientside_callback(
     Input("start-button-splicesite", "n_clicks"),
     prevent_initial_call=True,
 )
+
 
 @callback(
     Output("start-button-splicesite", "loading", allow_duplicate=True),
@@ -117,7 +134,7 @@ def start_infer_splicesite(loading: bool, splice_type: str, fasta_text: str):
         return False, [], [], None, False, True, no_input_alert
     if loading:
         try:
-            now = datetime.now().strftime('%Y%m%d_%H%M%S')
+            now = datetime.now().strftime("%Y%m%d_%H%M%S")
             with TemporaryDirectory() as temp_dir:
                 in_fasta = f"{temp_dir}/input.fasta"
                 outfile = f"{temp_dir}/result.csv"
@@ -126,25 +143,39 @@ def start_infer_splicesite(loading: bool, splice_type: str, fasta_text: str):
                 process_ret = subprocess.run(
                     [
                         "rna_app_infer",
-                        "--in_data", in_fasta,
-                        "--mission", splice_type,
-                        "--output_dir", temp_dir,
+                        "--in_data",
+                        in_fasta,
+                        "--mission",
+                        splice_type,
+                        "--output_dir",
+                        temp_dir,
                     ]
                 )
                 assert process_ret.returncode == 0, "Inference failed"
                 ret = pd.read_csv(outfile)
-            return False, ret.to_dict("records"), [{"field": i} for i in ret.columns], {"fileName": f"{splice_type}_results_{now}.csv"}, False, False, success_alert
+            return (
+                False,
+                ret.to_dict("records"),
+                [{"field": i} for i in ret.columns],
+                {"fileName": f"{splice_type}_results_{now}.csv"},
+                False,
+                False,
+                success_alert,
+            )
         except Exception as e:
             return False, [], [], None, False, True, [f"Error: {e}", fail_alert]
     else:
         return False, [], [], None, False, True, standby_alert
 
+
 layout = [
-    html.Div(children="Splice Site Prediction", style={"textAlign": "center", "fontSize": 30}),
+    html.Div(
+        children="Splice Site Prediction", style={"textAlign": "center", "fontSize": 30}
+    ),
     html.Hr(),
     dmc.MantineProvider(
-        children = dmc.Container(
-            children = [
+        children=dmc.Container(
+            children=[
                 upload_fasta,
                 splicesite_fasta_input,
                 dmc.MantineProvider(acceptor_or_donor),
@@ -154,7 +185,7 @@ layout = [
             style={
                 "width": "80%",
                 "marginBottom": "50px",
-            }
+            },
         ),
     ),
 ]

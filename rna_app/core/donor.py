@@ -3,7 +3,11 @@ import pandas as pd
 from .utils import deeprna_infer
 
 
-def infer_donor(in_data: str | FastaIterator | pd.DataFrame, output_dir: str, return_df: bool = False) -> pd.DataFrame | None:
+def infer_donor(
+    in_data: str | FastaIterator | pd.DataFrame,
+    output_dir: str,
+    return_df: bool = False,
+) -> pd.DataFrame | None:
     ret = deeprna_infer(
         in_data=in_data,
         mission="donor",
