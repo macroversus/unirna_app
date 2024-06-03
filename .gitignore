@@ -426,3 +426,4 @@ test/
 checkpoints
 example/*/outputs
 rna_app_outputs
+*.pid
