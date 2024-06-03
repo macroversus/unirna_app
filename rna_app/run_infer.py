@@ -1,20 +1,6 @@
-# def deeprna_infer(
-#     in_data: str | FastaIterator | pd.DataFrame,
-#     mission: str,
-#     pretrained: str,
-#     output_path: Optional[str | Path] = None,
-#     return_df: bool = False,
-#     seq_col: str = "seq",
-#     label_col: str = "label",
-#     level: str = "seq",
-#     out_seq_colname: Optional[str] = None,
-#     out_label_colname: Optional[str] = None,
-#     **kwargs,
-# ):
-
-
 def main():
     from argparse import ArgumentParser
+    from pathlib import Path
     from rna_app.core.acceptor import infer_acceptor
     from rna_app.core.donor import infer_donor
     from rna_app.core.lncrna_sublocalization import infer_lncrna_sublocalization
