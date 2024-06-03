@@ -49,7 +49,7 @@ def main():
         "--output_dir", type=str, required=True, help="Output directory"
     )
     parser.add_argument(
-        "--model_type", type=str, default="unirna", help="Model type. Only for ss"
+        "--model_type", type=str, default="unirna", help="Model type. Only for ss", choices=["unirna", "archiveii"]
     )
     parser.add_argument(
         "--keep_prob", action="store_true", help="Keep probability. Only for ss"
@@ -66,6 +66,7 @@ def main():
         help="Output attentions. Only for extract_embedding",
     )
     args = parser.parse_args()
+    Path(args.output_dir).mkdir(parents=True, exist_ok=True)
     match args.mission:
         case "rna_ss":
             infer_ss(
