@@ -126,7 +126,7 @@ clientside_callback(
 )
 
 ss_store = dcc.Store(id="ss-store", storage_type="session")
-ss_contrainer = dash_bio.FornaContainer(id="ss-contrainer")
+ss_contrainer = dash_bio.FornaContainer(id="ss-contrainer", height=400, width=800)
 ss_display = dcc.Dropdown(id="ss-display", options=[], multi=True, value=[])
 
 download_ss = dmc.Button(
@@ -228,6 +228,10 @@ def start_infer_rna_ss(loading: bool, fasta_text: str):
                     name: {
                         "sequence": seq,
                         "structure": ss,
+                        "options": {
+                            "name": name,
+                            "applyForce": False
+                        }
                     }
                     for name, seq, ss in ret[
                         ["name", "seq", "secondary_structure"]

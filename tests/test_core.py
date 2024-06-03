@@ -15,7 +15,7 @@ def test_runner(mission):
         cmd.extend(
             [
                 "--in_data",
-                f"{repo_root}/example/unirna_ss/input.fasta",
+                f"{repo_root}/example/unirna_ss/core_test.fasta",
                 "--mission", "rna_ss",
                 "--output_dir",
                 f"{repo_root}/example/unirna_ss/core/outputs/{mission}",
