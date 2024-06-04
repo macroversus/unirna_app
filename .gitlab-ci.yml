@@ -19,6 +19,7 @@ pytest:
     - echo "$RNA_TF_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa_rna_tf
     - chmod 600 ~/.ssh/id_rsa_rna_tf
     # Create SSH config file to use different keys for different repos
+    - cat ~/.ssh/id_rsa_dpt
     - |
       echo "
       Host deepprotein
@@ -32,8 +33,8 @@ pytest:
         IdentityFile ~/.ssh/id_rsa_rna_tf
       " > ~/.ssh/config
 
-    - pip install deepprotein@git+ssh://deepprotein/macromolecule/deepprotein@deeprna
-    - pip install unirna_tf@git+ssh://unirna_transformers/macromolecule/unirna_transformers@main
+    - pip install git+ssh://deepprotein/macromolecule/deepprotein@deeprna
+    - pip install git+ssh://unirna_transformers/macromolecule/unirna_transformers@main
     - pip install -e .
     - sh download_checkpoints.sh
   script:
