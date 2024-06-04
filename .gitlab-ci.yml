@@ -11,6 +11,9 @@ pytest:
     - apt install zip -y
     - pip config set global.index-url $PYPI_INDEX
     - pip install -U pip setuptools wheel
+    - echo "machine gitlab.com" > ~/.netrc
+    - echo "login gitlab-ci-token" >> ~/.netrc
+    - echo "password ${CI_JOB_TOKEN}" >> ~/.netrc
     - pip install -e .
     - sh download_checkpoints.sh
   script:
