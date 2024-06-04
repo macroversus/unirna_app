@@ -12,8 +12,8 @@ pytest:
     - pip config set global.index-url $PYPI_INDEX
     - pip install -U pip setuptools wheel
     - echo "machine git.dp.tech" > ~/.netrc
-    - echo "login CI" >> ~/.netrc
-    - echo "password 9iyMAoXs9sh7BjUgs4oB" >> ~/.netrc
+    - echo "login git" >> ~/.netrc
+    - echo "password ${CI_JOB_TOKEN}" >> ~/.netrc
     - pip install -e .
     - sh download_checkpoints.sh
   script:
