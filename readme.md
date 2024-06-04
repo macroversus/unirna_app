@@ -6,6 +6,8 @@
 
 ```shell
 pip install --no-cache-dir -U pip setuptools wheel
+pip install --no-cache-dir git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna
+pip install --no-cache-dir git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main
 pip install --no-cache-dir -e .
 zsh download_checkpoints.sh
 ```

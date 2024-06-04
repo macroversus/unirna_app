@@ -11,7 +11,7 @@ pytest:
     - apt install zip -y
     - pip config set global.index-url $PYPI_INDEX
     - pip install -U pip setuptools wheel
-    # Setup SSH keys for Project A and Project B
+    # Setup SSH keys for deepprotein and rna_transformers
     - mkdir -p ~/.ssh
     - echo "$DPROTEIN_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa_dpt
     - chmod 600 ~/.ssh/id_rsa_dpt
@@ -19,13 +19,8 @@ pytest:
     - chmod 600 ~/.ssh/id_rsa_rna_tf
     - ssh-keyscan -t rsa git.dp.tech >> ~/.ssh/known_hosts
     # Install dependencies
-    # - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_dpt' pip install git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna
-    # - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_rna_tf' pip install git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main
-    - echo -e "Host git.dp.tech\n\tIdentityFile ~/.ssh/id_rsa_dpt\n" >> ~/.ssh/config
-    # Using id_rsa_rna_tf key
-    - echo -e "Host git.dp.tech\n\tIdentityFile ~/.ssh/id_rsa_rna_tf\n" >> ~/.ssh/config
-    # Install the current project in editable mode
-    - export GIT_SSH_COMMAND='ssh -F ~/.ssh/config -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+    - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_dpt' pip install git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna
+    - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_rna_tf' pip install git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main
     - pip install -e .
     - sh download_checkpoints.sh
   script:
