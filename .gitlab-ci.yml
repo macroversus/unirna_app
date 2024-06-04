@@ -11,9 +11,30 @@ pytest:
     - apt install zip -y
     - pip config set global.index-url $PYPI_INDEX
     - pip install -U pip setuptools wheel
-    - echo "machine git.dp.tech" > ~/.netrc
-    - echo "login git" >> ~/.netrc
-    - echo "password ${CI_JOB_TOKEN}" >> ~/.netrc
+
+    # Setup SSH keys for Project A and Project B
+    - mkdir -p ~/.ssh
+    - echo "$DPROTEIN_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa_dpt
+    - chmod 600 ~/.ssh/id_rsa_dpt
+    - echo "$RNA_TF_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa_rna_tf
+    - chmod 600 ~/.ssh/id_rsa_rna_tf
+    - 
+    # Create SSH config file to use different keys for different repos
+    - |
+      echo "
+      Host deepprotein
+        HostName git.dp.tech
+        User git
+        IdentityFile ~/.ssh/id_rsa_dpt
+
+      Host unirna_transformers
+        HostName git.dp.tech
+        User git
+        IdentityFile ~/.ssh/id_rsa_rna_tf
+      " > ~/.ssh/config
+      
+    - pip install deepprotein@git+ssh://deepprotein/macromolecule/deepprotein@deeprna
+    - pip install unirna_tf@git+ssh://unirna_transformers/macromolecule/unirna_transformers@main
     - pip install -e .
     - sh download_checkpoints.sh
   script:
