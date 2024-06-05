@@ -22,7 +22,7 @@ pytest:
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_dpt' pip install git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna
     - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_rna_tf' pip install git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main
     - pip install -e .
-    - sh download_checkpoints.sh > /dev/null
+    - sh download_checkpoints.sh
   script:
     - pytest -v --cov .
 

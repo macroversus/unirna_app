@@ -1,3 +1,3 @@
 
-wget -r --no-parent -nH -R "index.html" --cut-dirs=2 --compression=gzip -P checkpoints --user=admin --password=LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN http://ohgy1146835.bohrium.tech:50004/ckpts/rna_app/lite_ckpts/ && \
-wget -r --no-parent -nH -R "index.html" --cut-dirs=2 --compression=gzip -P checkpoints --user=admin --password=LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN http://ohgy1146835.bohrium.tech:50004/ckpts/rna_app/pretrained/
+wget -r --no-parent -nv -nH -R "index.html" --cut-dirs=2 --compression=gzip -P checkpoints --user=admin --password=LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN http://ohgy1146835.bohrium.tech:50004/ckpts/rna_app/lite_ckpts/ && \
+wget -r --no-parent -nv -nH -R "index.html" --cut-dirs=2 --compression=gzip -P checkpoints --user=admin --password=LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN http://ohgy1146835.bohrium.tech:50004/ckpts/rna_app/pretrained/
