@@ -3,10 +3,10 @@ pytest:
   tags:
     - t4
   before_script:
-    - [ -f $HOME/.config/pip/pip.conf ] && rm $HOME/.config/pip/pip.conf
-    - [ -f $HOME/.pip/pip.conf ] && rm $HOME/.pip/pip.conf
-    - [ -f $HOME/.wgetrc ] && rm $HOME/.wgetrc
-    - [ -f $HOME/.curlrc ] && rm $HOME/.curlrc
+    - "[ -f $HOME/.config/pip/pip.conf ] && rm $HOME/.config/pip/pip.conf"
+    - "[ -f $HOME/.pip/pip.conf ] && rm $HOME/.pip/pip.conf"
+    - "[ -f $HOME/.wgetrc ] && rm $HOME/.wgetrc"
+    - "[ -f $HOME/.curlrc ] && rm $HOME/.curlrc"
     - apt update -y
     - apt install zip -y
     - pip config set global.index-url $PYPI_INDEX
