@@ -1,14 +1,22 @@
 {
     "Han Wen": {
         "email": "wenh@dp.tech",
-        "role": "Corresponding Author"
+        "role": "https://avatars.githubusercontent.com/u/6778015?v=4",
+        "avatar": null
     },
     "Xi Wang": {
         "email": "wangx@dp.tech",
-        "role": "First Author"
+        "role": "First Author",
+        "avatar": null
     },
     "Ruichu Gu": {
         "email": "gurc@dp.tech",
-        "role": "First Author"
+        "role": "First Author",
+        "avatar": null
+    },
+    "Lvjun Guo": {
+        "email": "guolj@dp.tech",
+        "role": "Assistant",
+        "avatar": "https://avatars.githubusercontent.com/u/23661091?v=4"
     }
 }

@@ -16,12 +16,15 @@ role_colors = {
 
 authors = json.loads((Path(__file__).parent / "authors.json").read_text())
 
-def generate_personal_card(name: str, mail: str, role: str):
+def generate_personal_card(name: str, mail: str, role: str, avatar: str):
     return (
         dmc.Card(
             children=[
                 dmc.Group(
                     [
+                        dmc.Avatar(
+                            src=avatar   
+                        ),
                         dmc.Text(name, fw=500),
                         dmc.Badge(role, color=role_colors.get(role, "gray"))
                     ],
@@ -51,8 +54,9 @@ layout = [
                 name=author,
                 mail=v["email"],
                 role=v["role"],
+                avatar=v["avatar"],
             )
             for author, v in authors.items()
-        ]
+        ],
     )
 ]
