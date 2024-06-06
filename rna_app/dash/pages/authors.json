@@ -1,0 +1,14 @@
+{
+    "Han Wen": {
+        "email": "wenh@dp.tech",
+        "role": "Corresponding Author"
+    },
+    "Xi Wang": {
+        "email": "wangx@dp.tech",
+        "role": "First Author"
+    },
+    "Ruichu Gu": {
+        "email": "gurc@dp.tech",
+        "role": "First Author"
+    }
+}

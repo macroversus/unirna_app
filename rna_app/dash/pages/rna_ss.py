@@ -244,8 +244,15 @@ def start_infer_rna_ss(loading: bool, fasta_text: str):
 
 layout = [
     html.Div(
-        children="RNA Secondary Structure Prediction",
-        style={"textAlign": "center", "fontSize": 30},
+        children=[
+            html.Div("RNA Secondary Structure Prediction", style={"flex": "1", "textAlign": "center"}),
+        ],
+        style={
+            "textAlign": "center", 
+            "fontSize": 30, 
+            "display": "flex",
+            "alignItems": "center",
+        },
     ),
     html.Hr(),
     dmc.MantineProvider(
