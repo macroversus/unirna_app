@@ -76,6 +76,7 @@ fasta_textarea = dmc.Textarea(
 
 status = dmc.Container(
     id="status",
+    ml="md",
 )
 
 ag_table = dag.AgGrid(
