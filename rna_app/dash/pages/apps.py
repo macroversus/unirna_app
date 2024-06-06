@@ -57,7 +57,6 @@ def generate_card(app_name: str, app_description: str, app_href: str, app_figure
                 withBorder=True,
                 shadow="sm",
                 radius="md",
-                w=350,
             )
     )
 
@@ -80,6 +79,7 @@ layout = [
                 )
                 for v in app_data.values()
             ],
+            gutter="md",
         ),
         size="xl",
     )
