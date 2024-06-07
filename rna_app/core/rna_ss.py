@@ -1,6 +1,7 @@
 from Bio.SeqIO.FastaIO import FastaIterator
 import pandas as pd
 import numpy as np
+from pathlib import Path
 from .utils import deeprna_infer
 
 
@@ -50,6 +51,7 @@ def infer_ss(
     ret["secondary_structure"] = ss_texts
     if not keep_prob:
         ret.drop(columns=["label"], inplace=True)
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
     ret.to_csv(f"{output_dir}/result.csv", index=False)
     if return_df:
         return ret
