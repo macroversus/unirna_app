@@ -1,22 +1,17 @@
 {
     "Han Wen": {
-        "email": "wenh@dp.tech",
+        "email": "wenh@iaar.ac.cn",
         "role": "Corresponding Author",
         "avatar": "https://avatars.githubusercontent.com/u/6778015?v=4"
     },
     "Xi Wang": {
-        "email": "wangx@dp.tech",
+        "email": "wangx@iaar.ac.cn",
         "role": "First Author",
         "avatar": "https://avatars.githubusercontent.com/u/52683930?v=4"
     },
     "Ruichu Gu": {
-        "email": "gurc@dp.tech",
+        "email": "gurc@iaar.ac.cn",
         "role": "First Author",
-        "avatar": null
-    },
-    "Lvjun Guo": {
-        "email": "guolj@dp.tech",
-        "role": "Assistant",
-        "avatar": "https://avatars.githubusercontent.com/u/23661091?v=4"
+        "avatar": "https://avatars.githubusercontent.com/u/82820732?v=4"
     }
 }

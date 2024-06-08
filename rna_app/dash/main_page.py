@@ -22,6 +22,7 @@ navbar = dmc.Container(
             children=[
                 dmc.Anchor(dmc.Button("Explore Apps"), href="/apps", size="md"),
                 dmc.Anchor(dmc.Button("Contact"), href="/contact", size="md"),
+                dmc.Anchor(dmc.Button("Copyright"), href="/copyright", size="md"),
             ],
             style={"marginLeft": "auto"},
         ),        

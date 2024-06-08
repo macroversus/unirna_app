@@ -9,7 +9,7 @@ register_page(__name__, name="Uni-RNA Apps", path="/")
 main_layout = dmc.BackgroundImage(
     children=dmc.Center(
         children=[
-            dmc.Text(
+            dmc.Anchor(
                 children=[
                     dmc.Text(
                         [
@@ -19,17 +19,18 @@ main_layout = dmc.BackgroundImage(
                                     "marginRight": "0.5rem",
                                 }
                             ), 
-                            "This is an inner page for reviewers to evaluate Uni-RNA models."
+                            "This page is for invited evaluation only, not for other use."
                         ], 
                         style={"fontSize": "1.5rem",}),
-                    dmc.Text("We provide easy-to-use webserver for all the major downstream tasks in our paper.", style={"fontSize": "1.5rem"}),
+                    dmc.Text("Any other usage should contact the corresponding author for futher permission.", style={"fontSize": "1.5rem"}),
                 ],
                 style={
                     "color": "white",
                     "textAlign": "center",
                     "margin": "2rem",
                     "backgroundColor": "rgba(0, 0, 0, 0.5)",
-                }
+                },
+                href="/contact",
             ),
             dmc.Button(
                 children=dmc.Anchor("Explore Our Uni-RNA Apps !", href="/apps", size="xl", style={"color": "white", "cursor": "pointer"}),
@@ -37,6 +38,29 @@ main_layout = dmc.BackgroundImage(
                 variant="gradient",
                 gradient={"from": "indigo", "to": "cyan"},
                 leftSection=DashIconify(icon="svg-spinners:blocks-scale")
+            ),
+            dmc.Anchor(
+                children=[
+                    dmc.Text(
+                        [
+                            DashIconify(
+                                icon="line-md:document-list", 
+                                style={
+                                    "marginRight": "0.5rem",
+                                }
+                            ), 
+                            "Copyright Notice."
+                        ], 
+                        style={"fontSize": "1.0rem",}),
+                ],
+                style={
+                    "color": "white",
+                    "marginTop": "0.5rem",
+                    "textAlign": "center",
+                    "alignItems": "center",
+                    "backgroundColor": "rgba(0, 0, 0, 0.5)",
+                },
+                href="/copyright",
             ),
         ],
         display="flex",
