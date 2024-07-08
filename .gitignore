@@ -425,6 +425,7 @@ test/
 
 checkpoints
 example/*/outputs
+example/*/with_proba_metrix
 example/*/core
 rna_app_outputs
 *.pid
