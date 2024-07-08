@@ -26,8 +26,9 @@ def infer_ss(
         return_df=True,
     )
     ss_texts = []
-    for v in ret["label"].values:
+    for n, v in ret[["name", "label"]].values:
         matrix = np.array(v)
+        np.save(f"{output_dir}/{n}.npy", matrix)
         dot_of_interest = np.where(matrix > 0.5)
         connections = pd.DataFrame([*dot_of_interest, matrix[dot_of_interest]]).T
         connections.columns = ["i", "j", "proba"]

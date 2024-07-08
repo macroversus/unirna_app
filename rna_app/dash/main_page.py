@@ -28,7 +28,7 @@ navbar = dmc.Container(
         ),        
     ],
     style={
-      "marginTop": "2%",  
+        "marginTop": "2%",  
     },
     display="flex",
     size="xl",
