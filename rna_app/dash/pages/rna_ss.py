@@ -129,7 +129,6 @@ clientside_callback(
 
 ss_workspace = dcc.Store(
     id="ss_workspace",
-    data=f"/tmp/{uuid1()}"
 )
 
 ss_log_container = dmc.Container(
@@ -144,6 +143,7 @@ download_ss = dmc.Button(
     "Download Results",
     id="export_results",
     n_clicks=0,
+    mb=50,
 )
 
 outputs_ss = dmc.Container(
@@ -170,12 +170,10 @@ outputs_ss = dmc.Container(
     State("ss_workspace", "data"),
     prevent_initial_call=True,
 )
-def export_csv(n_clicks, workspace):
-    print(ctx.triggered_id)
+def export_results(n_clicks, workspace):
     if ctx.triggered_id == "export_results":
         if Path(f"{workspace}/rna_ss_results.zip").exists():
             print("exporting...")
-        print(ctx.states)
         return dcc.send_file(f"{workspace}/rna_ss_results.zip")
     else:
         return no_update
@@ -191,9 +189,16 @@ def show_selected_sequences(value, data):
         raise PreventUpdate
     return [data[name] for name in value]
 
-
-def get_time():
-    return datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+@callback(
+    Output("ss_workspace", "data", allow_duplicate=True),
+    Output("ss_log_update", "disabled", allow_duplicate=True),
+    Output("outputs-ss", "display", allow_duplicate=True),
+    Output("status", "children", allow_duplicate=True),
+    Input("start-button-rna_ss", "n_clicks"),
+    prevent_initial_call=True,
+)
+def prepare(n_clicks):
+    return f"/tmp/{uuid1()}", False, "none", None
 
 @callback(
     Output("start-button-rna_ss", "loading", allow_duplicate=True),
@@ -206,14 +211,15 @@ def get_time():
     Output("ss-display", "value", allow_duplicate=True),
     Output("ss-store", "data", allow_duplicate=True),
     Output("ss_workspace", "data"),
-    Input("start-button-rna_ss", "loading"),
+    Output("ss_log_update", "disabled"),
+    State("start-button-rna_ss", "loading"),
     State("fasta-text", "value"),
-    State("ss_workspace", "data"),
+    Input("ss_workspace", "data"),
     prevent_initial_call=True,
 )
 def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
     if not fasta_text:
-        return False, [], [], True, "none", no_input_alert, [], [], [], ss_workspace
+        return False, [], [], True, "none", no_input_alert, [], [], [], ss_workspace, True
     Path(ss_workspace).mkdir(parents=True, exist_ok=True)
     if loading:
         try:
@@ -250,14 +256,21 @@ def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
             log_f.write(f"{get_time()}: 打包结果中...\n")
             subprocess.run(
                 [
-                    "zip", "-r", f"rna_ss_results.zip", f"./"
+                    "zip", "-r", "rna_ss_results.zip", "input.fasta", "result.csv",
                 ],
                 cwd=ss_workspace,
                 stdout=log_f,
                 stderr=log_f,
             )
             log_f.write(f"{get_time()}: 结果打包完成！\n")
+            log_f.flush()
             log_f.close()
+            subprocess.run(
+                [
+                    "zip", "-u", "rna_ss_results.zip", "rna_ss.log"
+                ],
+                cwd=ss_workspace,
+            )
             return (
                 False,
                 ret.to_dict("records"),
@@ -281,19 +294,10 @@ def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
                     ].values
                 },
                 ss_workspace,
+                True,
             )
         except Exception as e:
-            return False, [], [], True, "none", [fail_alert, f"Error: {e}"], [], [], [], ss_workspace
-
-@callback(
-    Output("ss_log_update", "disabled"),
-    Input("start-button-rna_ss", "loading"),
-    prevent_initial_call=True,
-)
-def start_monitor(loading: bool):
-    if loading:
-        return False
-    return True
+            return False, [], [], True, "none", [fail_alert, f"Error: {e}"], [], [], [], ss_workspace, True
 
 @callback(
     Output("ss_log_container", "children"),

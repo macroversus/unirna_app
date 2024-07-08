@@ -89,7 +89,7 @@ ag_table = dag.AgGrid(
 output_table = html.Div(
     id="output-table",
     children=[
-        dmc.Button("Export to CSV", id="export-csv", n_clicks=0),
+        # dmc.Button("Export to CSV", id="export-csv", n_clicks=0),
         ag_table,
     ],
     style={
@@ -99,14 +99,14 @@ output_table = html.Div(
 )
 
 
-@callback(
-    Output("result-table", "exportDataAsCsv"),
-    Input("export-csv", "n_clicks"),
-)
-def export_csv(n_clicks):
-    if n_clicks:
-        return True
-    return False
+# @callback(
+#     Output("result-table", "exportDataAsCsv"),
+#     Input("export-csv", "n_clicks"),
+# )
+# def export_csv(n_clicks):
+#     if n_clicks:
+#         return True
+#     return False
 
 @callback(
     Output("fasta-text", "value", allow_duplicate=True),
@@ -150,3 +150,6 @@ def check_fasta_text(fasta_text: str):
         return standby_alert
     else:
         return no_input_alert
+
+def get_time():
+    return datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
