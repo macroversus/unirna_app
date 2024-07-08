@@ -302,7 +302,6 @@ def start_monitor(loading: bool):
     prevent_initial_call=True,
 )
 def update_log_container(loading: bool, ss_workspace: str):
-    print(loading, ss_workspace)
     log_file = f"{ss_workspace}/rna_ss.log"
     if not loading:
         return None
@@ -313,7 +312,6 @@ def update_log_container(loading: bool, ss_workspace: str):
             log_text = "".join(filter(lambda x: "deprecated" not in x.lower(), f.readlines()))
         if not log_text:
             return dmc.Skeleton(height=300)
-        print(log_text)
         return [dmc.Textarea(log_text, autosize=True, style={"width": "100%", "height": "200px"}, display="block", maxRows=8)]
     except Exception as e:
         return [dmc.Text(f"Error: {e}")]
