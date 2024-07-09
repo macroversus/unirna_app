@@ -117,7 +117,6 @@ output_table = html.Div(
     prevent_initial_call=True,
 )
 def load_from_fasta_file(contents, last_modified):
-    print(contents)
     if not contents:
         return ""
     fasta_text = ""
@@ -135,7 +134,6 @@ def load_from_fasta_file(contents, last_modified):
     prevent_initial_call=True,
 )
 def check_fasta_text(fasta_text: str):
-    print(datetime.now())
     if fasta_text:
         seq_names = []
         for record in SeqIO.parse(io.StringIO(fasta_text), "fasta"):

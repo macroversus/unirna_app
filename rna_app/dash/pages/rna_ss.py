@@ -256,14 +256,13 @@ def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
             log_f.write(f"{get_time()}: 打包结果中...\n")
             subprocess.run(
                 [
-                    "zip", "-r", "rna_ss_results.zip", "input.fasta", "result.csv",
+                    "zip", "-r", "rna_ss_results.zip", "./", "-x", "rna_ss.log"
                 ],
                 cwd=ss_workspace,
                 stdout=log_f,
                 stderr=log_f,
             )
             log_f.write(f"{get_time()}: 结果打包完成！\n")
-            log_f.flush()
             log_f.close()
             subprocess.run(
                 [

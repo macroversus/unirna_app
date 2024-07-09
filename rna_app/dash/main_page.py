@@ -1,3 +1,5 @@
+import os
+os.environ["REACT_VERSION"] = "18.2.0"
 import dash
 from dash import Dash, html, dcc, callback, html, Input, Output
 from dash_iconify import DashIconify
@@ -44,4 +46,4 @@ app.layout = dmc.MantineProvider(
 )
 
 if __name__ == "__main__":
-    app.run(debug=True, port=50004, host="0.0.0.0")
+    app.run(debug=False, port=50004, host="0.0.0.0")
