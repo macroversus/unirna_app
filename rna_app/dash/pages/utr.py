@@ -19,6 +19,7 @@ from dash import (
     State,
     ctx,
     no_update,
+    get_app,
 )
 import time
 from uuid import uuid1
@@ -29,9 +30,13 @@ from rna_app.dash.collections.alerts import (
     success_alert,
     fail_alert,
 )
+from dash.long_callback import DiskcacheLongCallbackManager
+import diskcache
+cache = diskcache.Cache("/tmp/rna_ss_cache")
+long_callback_manager = DiskcacheLongCallbackManager(cache)
 
 register_page(__name__, name="5' UTR Mean Ribosomal Load Prediction", path="/utr")
-
+app = get_app()
 start_button_utr = dmc.Grid(
     children=[
         dmc.GridCol(
@@ -130,7 +135,7 @@ clientside_callback(
 def prepare(n_clicks):
     return f"/tmp/{uuid1()}", False, "none", True, None
 
-@callback(
+@app.long_callback(
     Output("start-button-utr", "loading", allow_duplicate=True),
     Output("result-table", "rowData", allow_duplicate=True),
     Output("result-table", "columnDefs", allow_duplicate=True),
@@ -142,6 +147,7 @@ def prepare(n_clicks):
     State("start-button-utr", "loading"),
     State("fasta-text", "value"),
     prevent_initial_call=True,
+    manager=long_callback_manager,
 )
 def start_infer_utr(workspace: str, loading: bool, fasta_text: str):
     if not fasta_text:
@@ -226,7 +232,7 @@ def update_log_container(loading: bool, workspace: str):
         return dmc.Skeleton(height=300)
     try:
         with open(log_file, "r") as f:
-            log_text = "".join(filter(lambda x: "deprecated" not in x.lower(), f.readlines()))
+            log_text = "".join(filter(lambda x: "deprecated" not in x.lower(), f.readlines()[-8:]))
         if not log_text:
             return dmc.Skeleton(height=300)
         return [dmc.Textarea(log_text, autosize=True, style={"width": "100%", "height": "200px"}, display="block", maxRows=8)]

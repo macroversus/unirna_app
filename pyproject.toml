@@ -52,6 +52,10 @@ dependencies = [
   "dash-iconify",
   "dash-auth",
   "dash-bio",
+  "diskcache",
+  "multiprocess",
+  "psutil",
+  "dash-extensions",
   # "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
   # "unirna_tf@git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
 ]

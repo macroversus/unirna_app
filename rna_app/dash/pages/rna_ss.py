@@ -9,7 +9,7 @@ import subprocess
 from dash import (
     Dash,
     html,
-    dcc,
+    # dcc,
     callback,
     Output,
     Input,
@@ -18,6 +18,7 @@ from dash import (
     State,
     ctx,
     no_update,
+    get_app,
 )
 from uuid import uuid1
 from dash.exceptions import PreventUpdate
@@ -29,9 +30,15 @@ from rna_app.dash.collections.alerts import (
     success_alert,
     fail_alert,
 )
+from dash.long_callback import DiskcacheLongCallbackManager
+import diskcache
+from dash_extensions.enrich import dcc
+from flask import Flask, Response
+cache = diskcache.Cache("/tmp/rna_ss_cache")
+long_callback_manager = DiskcacheLongCallbackManager(cache)
 
 register_page(__name__, name="RNA Secondary Structure Prediction", path="/rna_ss")
-
+app = get_app()
 start_button_rna_ss = dmc.Grid(
     children=[
         dmc.GridCol(
@@ -144,6 +151,7 @@ download_ss = dmc.Button(
     id="export_results",
     n_clicks=0,
     mb=50,
+    display="none",
 )
 
 outputs_ss = dmc.Container(
@@ -155,29 +163,55 @@ outputs_ss = dmc.Container(
         html.Hr(),
         ss_contrainer,
         html.Hr(),
-        download_ss,
-        dcc.Interval(id="ss_log_update", interval=200, n_intervals=0, disabled=True),
-        dcc.Download(id="results_downloader"),
+        dcc.Interval(id="ss_log_update", interval=1000, n_intervals=0, disabled=True),
     ],
     w="100%",
     display="none",
 )
 
+@app.server.route('/download-results/<path:file_path>')
+def download_results(file_path):
+    full_path = f'/{file_path}'
+    def generate():
+        with open(full_path, 'rb') as f:
+            while chunk := f.read(8192):  # 每次读取8KB
+                yield chunk
+    total_size = os.path.getsize(full_path)
+    headers = {
+        'Content-Disposition': f'attachment; filename={os.path.basename(full_path)}',
+        'Content-Type': 'application/zip',
+        'Content-Length': str(total_size),
+    }
+    return Response(generate(), headers=headers)
+
+clientside_callback(
+    """
+    function updateLoadingState(n_clicks) {
+        return true
+    }
+    """,
+    Output("export_results", "loading", allow_duplicate=True),
+    Input("export_results", "n_clicks"),
+    prevent_initial_call=True,
+)
 
 @callback(
-    Output("results_downloader", "data", allow_duplicate=True),
+    Output("dummy", "href"),
+    Output("export_results", "loading"),
     Input("export_results", "n_clicks"),
     State("ss_workspace", "data"),
     prevent_initial_call=True,
 )
 def export_results(n_clicks, workspace):
-    if ctx.triggered_id == "export_results":
-        if Path(f"{workspace}/rna_ss_results.zip").exists():
-            print("exporting...")
-        return dcc.send_file(f"{workspace}/rna_ss_results.zip")
-    else:
-        return no_update
-
+    try:
+        if ctx.triggered_id == "export_results":
+            if Path(f"{workspace}/rna_ss_results.zip").exists():
+                print("exporting...")
+            return f"/download-results{workspace}/rna_ss_results.zip", False
+        return no_update, False
+    except Exception as e:
+        return no_update, False
+    
 @callback(
     Output("ss-contrainer", "sequences"),
     Input("ss-display", "value"),
@@ -200,26 +234,28 @@ def show_selected_sequences(value, data):
 def prepare(n_clicks):
     return f"/tmp/{uuid1()}", False, "none", None
 
-@callback(
+@app.long_callback(
     Output("start-button-rna_ss", "loading", allow_duplicate=True),
     Output("result-table", "rowData", allow_duplicate=True),
     Output("result-table", "columnDefs", allow_duplicate=True),
     Output("output-table", "hidden", allow_duplicate=True),
-    Output("outputs-ss", "display", allow_duplicate=True),
     Output("status", "children", allow_duplicate=True),
+    Output("outputs-ss", "display", allow_duplicate=True),
     Output("ss-display", "options", allow_duplicate=True),
     Output("ss-display", "value", allow_duplicate=True),
     Output("ss-store", "data", allow_duplicate=True),
     Output("ss_workspace", "data"),
     Output("ss_log_update", "disabled"),
+    Output("export_results", "display"),
     State("start-button-rna_ss", "loading"),
     State("fasta-text", "value"),
     Input("ss_workspace", "data"),
     prevent_initial_call=True,
+    manager=long_callback_manager,
 )
 def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
     if not fasta_text:
-        return False, [], [], True, "none", no_input_alert, [], [], [], ss_workspace, True
+        return False, [], [], True, no_input_alert, "none", [], [], [], ss_workspace, True, "none"
     Path(ss_workspace).mkdir(parents=True, exist_ok=True)
     if loading:
         try:
@@ -263,40 +299,64 @@ def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
                 stderr=log_f,
             )
             log_f.write(f"{get_time()}: 结果打包完成！\n")
-            log_f.close()
             subprocess.run(
                 [
                     "zip", "-u", "rna_ss_results.zip", "rna_ss.log"
                 ],
                 cwd=ss_workspace,
             )
+            if (ret.shape[0]) > 5 or (len("".join(ret["seq"])) > 200):
+                log_f.write(f"{get_time()}: 序列超过5条或核酸数超过200, 不显示二级结构\n")
+                ss_display_content = ["none", [], [], []]
+                out_status = success_alert
+            else:
+                ss_display_content = [
+                    "inline-block", 
+                    ret["name"].tolist(),
+                    [ret["name"].iloc[0]],
+                    {
+                        name: {
+                            "sequence": seq,
+                            "structure": ss,
+                            "options": {
+                                "name": name,
+                                "applyForce": False
+                            }
+                        }
+                        for name, seq, ss in ret[
+                            ["name", "seq", "secondary_structure"]
+                        ].values
+                    },
+                ]
+                out_status = [
+                    success_alert,
+                    dmc.Alert(
+                        title="Too Many Sequences",
+                        children="The number of sequences is too large to display secondary structures. Please download the results and use a local viewer.",
+                        color="yellow",
+                        icon=dmc.ActionIcon(
+                            DashIconify(icon="line-md:loading-alt-loop"),
+                            size="md",
+                            variant="filled",
+                            color="yellow",
+                        ),
+                    )
+                ]
+            log_f.close()
+            print("done")
             return (
                 False,
                 ret.to_dict("records"),
                 [{"field": i} for i in ret.columns],
                 True,
-                "inline-block",
-                success_alert,
-                ret["name"].tolist(),
-                [ret["name"].iloc[0]],
-                {
-                    name: {
-                        "sequence": seq,
-                        "structure": ss,
-                        "options": {
-                            "name": name,
-                            "applyForce": False
-                        }
-                    }
-                    for name, seq, ss in ret[
-                        ["name", "seq", "secondary_structure"]
-                    ].values
-                },
+                out_status,
+                *ss_display_content,
                 ss_workspace,
                 True,
+                "flex",
             )
         except Exception as e:
-            return False, [], [], True, "none", [fail_alert, f"Error: {e}"], [], [], [], ss_workspace, True
+            return False, [], [], True, [fail_alert, f"Error: {e}"], "none", [], [], [], ss_workspace, True, "none"
 
 @callback(
     Output("ss_log_container", "children"),
@@ -312,7 +372,7 @@ def update_log_container(loading: bool, ss_workspace: str):
         return dmc.Skeleton(height=300)
     try:
         with open(log_file, "r") as f:
-            log_text = "".join(filter(lambda x: "deprecated" not in x.lower(), f.readlines()))
+            log_text = "".join(filter(lambda x: "deprecated" not in x.lower(), f.readlines()[-8:]))
         if not log_text:
             return dmc.Skeleton(height=300)
         return [dmc.Textarea(log_text, autosize=True, style={"width": "100%", "height": "200px"}, display="block", maxRows=8)]
@@ -345,6 +405,8 @@ layout = [
                 outputs_ss,
                 output_table,
                 ss_workspace,
+                download_ss,
+                dcc.Location(id="dummy", refresh=True),
             ],
         ),
     ),

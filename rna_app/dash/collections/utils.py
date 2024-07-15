@@ -54,7 +54,7 @@ upload_fasta = dcc.Upload(
         ),
         dmc.Text("Max file size: 1 MB"),
     ],
-    max_size=1048576,
+    max_size=11485760,
     multiple=True,
     style={
         "lineHeight": "60px",

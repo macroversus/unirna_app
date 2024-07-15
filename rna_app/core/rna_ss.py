@@ -1,6 +1,8 @@
 from Bio.SeqIO.FastaIO import FastaIterator
+import pickle
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 from pathlib import Path
 from .utils import deeprna_infer
 
@@ -26,9 +28,11 @@ def infer_ss(
         return_df=True,
     )
     ss_texts = []
-    for n, v in ret[["name", "label"]].values:
-        matrix = np.array(v)
-        np.save(f"{output_dir}/{n}.npy", matrix)
+    ss_matrix = []
+    for n, v in tqdm(ret[["name", "label"]].values, desc="Saving secondary structure"):
+        matrix = np.array(v, dtype=np.float16)
+        ss_matrix.append({"id": n, "matrix": matrix})
+        # np.save(f"{output_dir}/{n}.npy", matrix)
         dot_of_interest = np.where(matrix > 0.5)
         connections = pd.DataFrame([*dot_of_interest, matrix[dot_of_interest]]).T
         connections.columns = ["i", "j", "proba"]
@@ -49,6 +53,8 @@ def infer_ss(
             ss_text[j] = ")"
         ss_text = "".join(ss_text)
         ss_texts.append(ss_text)
+    with open(f"{output_dir}/probability_matrix.pkl", "wb+") as f:
+        pickle.dump(ss_matrix, f)
     ret["secondary_structure"] = ss_texts
     if not keep_prob:
         ret.drop(columns=["label"], inplace=True)
