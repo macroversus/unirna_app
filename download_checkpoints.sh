@@ -1,2 +1,2 @@
-wget -e robots=off -r -np -nv -nH -R "index.html*" -R "robots.txt" --cut-dirs=1 --compression=gzip -P checkpoints --user=admin --password=LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN http://ohgy1146835.bohrium.tech:50004/rna_app/lite_ckpts/ && \
-wget -e robots=off -r -np -nv -nH -R "index.html*" -R "robots.txt" --cut-dirs=1 --compression=gzip -P checkpoints --user=admin --password=LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN http://ohgy1146835.bohrium.tech:50004/rna_app/pretrained/
+wget -e robots=off -r -np -nv -nH -R "index.html*" -R "robots.txt" --cut-dirs=1 --compression=gzip -P checkpoints --user=admin --ask-password http://ohgy1146835.bohrium.tech:50004/rna_app/pretrained/
+wget -e robots=off -r -np -nv -nH -R "index.html*" -R "robots.txt" --cut-dirs=1 --compression=gzip -P checkpoints --user=admin --ask-password http://ohgy1146835.bohrium.tech:50004/rna_app/lite_ckpts/
