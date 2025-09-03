@@ -6,8 +6,6 @@ You can download the pre-trained weights and downstream weights using either of 
 
 > Note: Password authentication is required
 
-### Option 1: Using wget commands
-
 ```shell
 # pre-trained weights
 wget -e robots=off -r -np -nv -nH -R "index.html*" -R "robots.txt" --cut-dirs=1 --compression=gzip -P checkpoints --user=admin --ask-password http://ohgy1146835.bohrium.tech:50004/rna_app/pretrained/
@@ -15,6 +13,16 @@ wget -e robots=off -r -np -nv -nH -R "index.html*" -R "robots.txt" --cut-dirs=1 
 # downstream task weights
 wget -e robots=off -r -np -nv -nH -R "index.html*" -R "robots.txt" --cut-dirs=1 --compression=gzip -P checkpoints --user=admin --ask-password http://ohgy1146835.bohrium.tech:50004/rna_app/lite_ckpts/
 ```
+
+## Installation
+
+```shell
+pip install --no-cache-dir -U pip setuptools wheel
+pip install --no-cache-dir git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna
+pip install --no-cache-dir git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main
+pip install --no-cache-dir -e .
+```
+
 
 ## Description
 
