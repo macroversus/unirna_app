@@ -76,12 +76,12 @@ layout = [
                         app_href=v["href"],
                         app_figure=v["fig"],
                     ),
-                    span=4,
+                    span=6,
                 )
                 for v in app_data.values()
             ],
             gutter="md",
         ),
-        size="xl",
+        size="lg",
     )
 ]

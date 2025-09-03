@@ -10,5 +10,17 @@
         "href": "/utr",
         "fig": "/assets/utr.png",
         "description": "Use the Uni-RNA pre-training model to predict the mean ribosomal loading of mRNA's 5'UTR, aiding in obtaining functionally superior mRNA for scientific research and pharmaceutical development."
+    },
+    "m6a": {
+        "page_name": "m6A Modification Prediction",
+        "href": "/m6a",
+        "fig": "/assets/m6a.png",
+        "description": "Use the Uni-RNA pre-training model to identify potential methylation modification sites, enhancing your research into RNA functions in the presence of extensive modifications."
+    },
+    "lncrna_sublocalization": {
+        "page_name": "lncRNA Subcellular Localization Prediction",
+        "href": "/lncrna_sublocalization",
+        "fig": "/assets/lncrna_sublocalization.png",
+        "description": "Long non-coding RNAs (lncRNAs) play a crucial role in the regulatory network of RNA functions. Using the Uni-RNA pre-training model, we efficiently and accurately predict the potential localization of lncRNAs within cells and extract important motifs through the model's attention scores."
     }
 }
