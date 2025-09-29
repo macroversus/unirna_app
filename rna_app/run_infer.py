@@ -2,6 +2,7 @@ def main():
     from argparse import ArgumentParser
     from pathlib import Path
     from rna_app.core.acceptor import infer_acceptor
+    from rna_app.core.apa import infer_apa
     from rna_app.core.donor import infer_donor
     from rna_app.core.lncrna_sublocalization import infer_lncrna_sublocalization
     from rna_app.core.m6a import infer_m6a
@@ -24,6 +25,7 @@ def main():
             "rna_ss",
             "extract_embedding",
             "acceptor",
+            "apa",
             "donor",
             "lncrna_sublocalization",
             "m6a",
@@ -66,7 +68,7 @@ def main():
                 in_data=args.in_data,
                 output_dir=args.output_dir,
                 pretrained=args.pretrained,
-                output_attentions=True,
+                output_attentions=args.output_attentions,
             )
         case _:
             locals()[f"infer_{args.mission}"](
