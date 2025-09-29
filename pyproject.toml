@@ -59,6 +59,7 @@ dependencies = [
   "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
   "unirna-tf @ git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
   "transformers==4.56.0",
+  "numpy<2.0"
 ]
 
 [project.scripts]
