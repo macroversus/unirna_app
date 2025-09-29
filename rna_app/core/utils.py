@@ -4,6 +4,7 @@ from Bio import SeqIO
 from Bio.SeqIO.FastaIO import FastaIterator
 import pandas as pd
 from typing import Optional
+import unirna_tf
 from deepprotein.inference import LazyInferencer
 
 ROOT_DIR = Path(__file__).parent.parent.parent
