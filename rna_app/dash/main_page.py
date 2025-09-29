@@ -110,7 +110,7 @@ app.layout = dmc.MantineProvider(
                      }
                  ),
                  dmc.Text(
-                     "Institute for Advanced Algorithms Research, Shanghai. (hereinafter referred to as “IAAR”) fully possesses the copyright of this code. Without IAAR’s written authorization, any natural person or enterprise shall not copy, forward or perform any unauthorized act. If authorized, the source must be clearly indicated. Otherwise, IAAR has the right to pursue liability for the violation of the above mentioned terms, and reserves the right to pursue other legal responsibilities.",
+                     "The Shanghai Institute for Advanced Algorithms Research (hereinafter referred to as “IAAR”) and Beijing DP Technology (hereinafter referred to as “DP Technology”) fully possess the copyright to this code. Without the written authorization of IAAR and DP Technology, no natural person or enterprise shall copy, forward, or perform any unauthorized act. If authorization is granted, the source must be clearly indicated. Otherwise, IAAR and DP Technology have the right to hold the violator liable for violating the above-mentioned terms and reserve the right to pursue further legal action.",
                      size="sm",
                      style={
                          "textAlign": "justify",
