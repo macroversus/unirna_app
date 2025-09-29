@@ -39,29 +39,6 @@ main_layout = dmc.BackgroundImage(
                 gradient={"from": "indigo", "to": "cyan"},
                 leftSection=DashIconify(icon="svg-spinners:blocks-scale")
             ),
-            dmc.Anchor(
-                children=[
-                    dmc.Text(
-                        [
-                            DashIconify(
-                                icon="line-md:document-list", 
-                                style={
-                                    "marginRight": "0.5rem",
-                                }
-                            ), 
-                            "Copyright Notice."
-                        ], 
-                        style={"fontSize": "1.0rem",}),
-                ],
-                style={
-                    "color": "white",
-                    "marginTop": "0.5rem",
-                    "textAlign": "center",
-                    "alignItems": "center",
-                    "backgroundColor": "rgba(0, 0, 0, 0.5)",
-                },
-                href="/copyright",
-            ),
         ],
         display="flex",
         style={
