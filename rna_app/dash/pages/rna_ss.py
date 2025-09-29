@@ -34,7 +34,7 @@ from dash.long_callback import DiskcacheLongCallbackManager
 import diskcache
 from dash_extensions.enrich import dcc
 from flask import Flask, Response
-cache = diskcache.Cache("/tmp/rna_ss_cache")
+cache = diskcache.Cache("/tmp/unirna_app/rna_ss_cache")
 long_callback_manager = DiskcacheLongCallbackManager(cache)
 
 register_page(__name__, name="RNA Secondary Structure Prediction", path="/rna_ss")

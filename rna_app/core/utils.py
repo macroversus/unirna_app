@@ -12,6 +12,7 @@ PRETRAINED_DIR = ROOT_DIR / "checkpoints/pretrained"
 CHECKPOINTS_DIR = ROOT_DIR / "checkpoints/lite_ckpts"
 
 CHEKPOINTS = {
+    "apa" : CHECKPOINTS_DIR / "apa.pth",
     "utr": CHECKPOINTS_DIR / "utr.pth",
     "ss_unirna": CHECKPOINTS_DIR / "unirna_ss_0.5_thrs_dataset.pth",
     "ss_archiveii": CHECKPOINTS_DIR / "unirna_ss_archiveii_dataset.pth",

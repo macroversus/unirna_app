@@ -36,6 +36,7 @@ example_fastas = {
         EXAMPLE_DIR / "lncrna_sublocalization" / "input.fasta"
     ),
     "extract_embedding": str(EXAMPLE_DIR / "extract_embedding" / "input.fasta"),
+    "apa": str(EXAMPLE_DIR / "utr" / "input.fasta"),  # Use UTR example for APA
 }
 
 upload_fasta = dcc.Upload(

@@ -57,7 +57,7 @@ dependencies = [
   "psutil",
   "dash-extensions",
   "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
-  "unirna_tf@git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
+  "unirna-tf @ git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
   "transformers==4.56.0",
 ]
 

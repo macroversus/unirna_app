@@ -22,5 +22,17 @@
         "href": "/lncrna_sublocalization",
         "fig": "/assets/lncrna_sublocalization.png",
         "description": "Long non-coding RNAs (lncRNAs) play a crucial role in the regulatory network of RNA functions. Using the Uni-RNA pre-training model, we efficiently and accurately predict the potential localization of lncRNAs within cells and extract important motifs through the model's attention scores."
+    },
+    "apa": {
+        "page_name": "Alternative Polyadenylation Prediction",
+        "href": "/apa",
+        "fig": "/assets/main.png",
+        "description": "Predict alternative polyadenylation (APA) sites in RNA sequences using the Uni-RNA pre-training model. APA is a crucial post-transcriptional regulation mechanism that affects mRNA stability, localization, and translation efficiency."
+    },
+    "extract_embedding": {
+        "page_name": "RNA Sequence Embedding Extraction",
+        "href": "/extract_embedding",
+        "fig": "/assets/main.png",
+        "description": "Extract high-dimensional embeddings from RNA sequences using the Uni-RNA pre-training model. These embeddings capture rich semantic information about RNA sequences and can be used for downstream analysis and machine learning tasks."
     }
 }

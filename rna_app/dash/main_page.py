@@ -4,6 +4,7 @@ import dash
 from dash import Dash, html, dcc, callback, html, Input, Output
 from dash_iconify import DashIconify
 import dash_mantine_components as dmc
+import argparse
 
 app = Dash(__name__, use_pages=True, pages_folder="pages")
 server = app.server
@@ -46,4 +47,10 @@ app.layout = dmc.MantineProvider(
 )
 
 if __name__ == "__main__":
-    app.run_server(debug=False, port=50004, host="0.0.0.0")
+    parser = argparse.ArgumentParser(description="Run Uni-RNA Dash App")
+    parser.add_argument("--debug", action="store_true", default=False, help="Run in debug mode")
+    parser.add_argument("--port", type=int, default=50004, help="Port to run the server on (default: 50004)")
+    parser.add_argument("--host", type=str, default="0.0.0.0", help="Host to run the server on (default: 0.0.0.0)")
+    args = parser.parse_args()
+    
+    app.run_server(debug=args.debug, port=args.port, host=args.host)
