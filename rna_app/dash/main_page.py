@@ -79,9 +79,9 @@ app.layout = dmc.MantineProvider(
                              }
                          ),
                          "). Other experimental results and raw data are available at the Registry and database of bioparts for synthetic biology (",
-                         dmc.Anchor("https://www.biosino.org/rdbsb/", href="https://www.biosino.org/rdbsb/", target="_blank", c="blue", style={"textDecoration": "underline"}),
+                         html.A("https://www.biosino.org/rdbsb/", href="https://www.biosino.org/rdbsb/", target="_blank", style={"color": "blue", "textDecoration": "underline"}),
                          ") under the accession numbers OENR1-OENR11903. Model weights can be found at ",
-                         dmc.Anchor("https://github.com/macroversus/unirna_app", href="https://github.com/macroversus/unirna_app", target="_blank", c="blue", style={"textDecoration": "underline"}),
+                         html.A("https://github.com/macroversus/unirna_app", href="https://github.com/macroversus/unirna_app", target="_blank", style={"color": "blue", "textDecoration": "underline"}),
                          ", and the wget download password is ",
                          dmc.Code("LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN", style={"backgroundColor": "#f8f9fa", "padding": "2px 4px", "borderRadius": "3px"}),
                          "."
