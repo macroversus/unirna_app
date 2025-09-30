@@ -36,7 +36,7 @@
         "description": "Long non-coding RNAs (lncRNAs) play a crucial role in the regulatory network of RNA functions. Using the Uni-RNA pre-training model, we efficiently and accurately predict the potential localization of lncRNAs within cells and extract important motifs through the model's attention scores."
     },
     "seq_optimization": {
-        "page_name": "Sequence Optimization",
+        "page_name": "RNA sequence optimization tool",
         "href": "/seq_optimization",
         "fig": "/assets/RNA序列优化.jpg",
         "description": "Use the fine-tuned Uni-RNA model to optimize template sequence based on a given biological metric, generating new sequences with enhanced biological activity."
