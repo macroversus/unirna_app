@@ -21,7 +21,8 @@ CHEKPOINTS = {
     "lncrna_sublocalization": CHECKPOINTS_DIR / "lncrna_sublocalization.pth",
     "m6a": CHECKPOINTS_DIR / "m6a.pth",
     "pirna": CHECKPOINTS_DIR / "pirna.pth",
-    "seq_optimization": CHECKPOINTS_DIR / "best_unirna_reg_model.pth",
+    "trna_seq_optimization": CHECKPOINTS_DIR / "trna_best_unirna_reg_model.pth",
+    "5utr_seq_optimization": CHECKPOINTS_DIR / "5utr_best_unirna_reg_model.pth",
 }
 
 PRETRAINED = {

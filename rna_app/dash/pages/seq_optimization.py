@@ -76,6 +76,19 @@ iterations_input = dmc.NumberInput(
     step=1,
 )
 
+# Model weight selection
+model_weight_select = dmc.Select(
+    id="model-weight-select",
+    label="Model Weight",
+    placeholder="Select model weight type",
+    value="trna",
+    data=[
+        {"value": "trna", "label": "tRNA"},
+        {"value": "5utr", "label": "5' UTR"},
+    ],
+    required=True,
+)
+
 start_button_seq_optimization = dmc.Grid(
     children=[
         dmc.GridCol(
@@ -190,10 +203,11 @@ def prepare(n_clicks):
     State("template-text", "value"),
     State("mutation-ratio", "value"),
     State("iterations-input", "value"),
+    State("model-weight-select", "value"),
     prevent_initial_call=True,
     manager=long_callback_manager,
 )
-def start_seq_optimization(workspace: str, loading: bool, template: str, mutation_ratio: float, iterations: int):
+def start_seq_optimization(workspace: str, loading: bool, template: str, mutation_ratio: float, iterations: int, model_weight: str):
     if not template:
         time.sleep(0.3)
         return False, [], [], "none", True, no_input_alert, True
@@ -208,6 +222,7 @@ def start_seq_optimization(workspace: str, loading: bool, template: str, mutatio
             log_f.write(f"{get_time()}: Template sequence: {template}\n")
             log_f.write(f"{get_time()}: Mutation ratio: {mutation_ratio}\n")
             log_f.write(f"{get_time()}: Iterations: {iterations}\n")
+            log_f.write(f"{get_time()}: Model weight: {model_weight}\n")
             log_f.write(f"{get_time()}: Loading model...\n")
             
             # 模拟模型加载进度
@@ -231,6 +246,8 @@ def start_seq_optimization(workspace: str, loading: bool, template: str, mutatio
                     str(mutation_ratio),
                     "--iterations",
                     str(iterations),
+                    "--model_weight",
+                    model_weight,
                 ],
                 stdout=log_f,
                 stderr=log_f,
@@ -317,6 +334,7 @@ layout = [
             children=[
                 seq_optimization_input,
                 dmc.Stack([
+                    model_weight_select,
                     mutation_ratio_slider,
                     iterations_input,
                 ], gap="md"),
