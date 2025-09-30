@@ -69,6 +69,13 @@ def main():
         default=20,
         help="Optimization iterations. Only for seq_optimization",
     )
+    parser.add_argument(
+        "--model_weight",
+        type=str,
+        default="trna",
+        help="Model weight type: trna or 5utr. Only for seq_optimization",
+        choices=["trna", "5utr"],
+    )
     args = parser.parse_args()
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
     match args.mission:
@@ -104,6 +111,7 @@ def main():
                 output_dir=args.output_dir,
                 mutation_ratio=args.mutation_ratio,
                 iterations=args.iterations,
+                model_weight=args.model_weight,
                 return_df=False,
             )
         case _:

@@ -147,6 +147,22 @@ layout = [
     dmc.MantineProvider(
         children=dmc.Container(
             children=[
+                dmc.Alert(
+                    title="LncRNA Subcellular Localization Prediction",
+                    children=[
+                        html.Div([
+                            html.Strong("Tag0: "),
+                            html.Span("Cytoplasmic localization")
+                        ], style={"marginTop": "0.5rem"}),
+                        html.Div([
+                            html.Strong("Tag1: "),
+                            html.Span("Nuclear localization")
+                        ], style={"marginTop": "0.25rem"}),
+                    ],
+                    color="blue",
+                    icon=DashIconify(icon="line-md:star-twotone-loop"),
+                    mb="md"
+                ),
                 upload_fasta,
                 lncrna_sublocalization_fasta_input,
                 start_button_lncrna_sublocalization,

@@ -10,6 +10,7 @@ def infer_seq_optimization(
     output_dir: str,
     mutation_ratio: float = 0.1,
     iterations: int = 20,
+    model_weight: str = "trna",
     return_df: bool = False,
 ) -> pd.DataFrame | None:
     """
@@ -20,6 +21,7 @@ def infer_seq_optimization(
         output_dir: 输出目录
         mutation_ratio: 突变比例 (0.01-0.5)
         iterations: 优化迭代次数
+        model_weight: 模型权重类型 ("trna" or "5utr")
         return_df: 是否返回DataFrame
     
     Returns:
@@ -28,8 +30,9 @@ def infer_seq_optimization(
     # seq_generator.py的路径
     seq_generator_path = Path(__file__).parent / "seq_generator.py"
     
-    # 从CHEKPOINTS和PRETRAINED获取模型路径
-    model_path = CHEKPOINTS["seq_optimization"]
+    # 从CHEKPOINTS和PRETRAINED获取模型路径，根据model_weight选择
+    model_key = f"{model_weight}_seq_optimization"
+    model_path = CHEKPOINTS[model_key]
     base_model_path = PRETRAINED["L16"]
     
     # 构建命令
