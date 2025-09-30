@@ -10,6 +10,7 @@ def main():
     from rna_app.core.utr import infer_utr
     from rna_app.core.rna_ss import infer_ss
     from rna_app.core.extract_embedding import extract_embedding
+    from rna_app.core.seq_optimization import infer_seq_optimization
 
     # 当前deeprna存在显存泄漏问题，暂无法通过任何方式解决，因此调用额外的脚本来进行推理
     parser = ArgumentParser()
@@ -31,6 +32,7 @@ def main():
             "m6a",
             "pirna",
             "utr",
+            "seq_optimization",
         ],
     )
     parser.add_argument(
@@ -53,6 +55,18 @@ def main():
         action="store_true",
         help="Output attentions. Only for extract_embedding",
     )
+    parser.add_argument(
+        "--mutation_ratio",
+        type=float,
+        default=0.1,
+        help="Mutation ratio. Only for seq_optimization",
+    )
+    parser.add_argument(
+        "--iterations",
+        type=int,
+        default=20,
+        help="Optimization iterations. Only for seq_optimization",
+    )
     args = parser.parse_args()
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
     match args.mission:
@@ -69,6 +83,14 @@ def main():
                 output_dir=args.output_dir,
                 pretrained=args.pretrained,
                 output_attentions=args.output_attentions,
+            )
+        case "seq_optimization":
+            infer_seq_optimization(
+                in_data=args.in_data,
+                output_dir=args.output_dir,
+                mutation_ratio=args.mutation_ratio,
+                iterations=args.iterations,
+                return_df=False,
             )
         case _:
             locals()[f"infer_{args.mission}"](

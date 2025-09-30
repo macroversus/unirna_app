@@ -57,9 +57,10 @@ dependencies = [
   "psutil",
   "dash-extensions",
   "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
-  "unirna-tf @ git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
+  "unirna-tf",
   "transformers==4.56.0",
-  "numpy<2.0"
+  "numpy<2.0",
+  "seaborn>=0.13.2",
 ]
 
 [project.scripts]
@@ -71,3 +72,6 @@ packages = ["rna_app"]
 [tool.setuptools_scm]
 write_to = "rna_app/_version.py"
 write_to_template = "version = __version__ = {version!r}\nversion_tuple = __version_tuple__ = {version_tuple!r}\nrevision = __revision__ = {scm_version.node!r}\n"
+
+[tool.uv.sources]
+unirna-tf = { git = "ssh://git@git.dp.tech/macromolecule/unirna_transformers", rev = "main" }
