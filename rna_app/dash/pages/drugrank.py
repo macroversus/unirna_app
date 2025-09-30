@@ -292,12 +292,12 @@ def start_infer_drugrank(workspace: str, loading: bool, csv_text: str, fasta_tex
             print(log_file)
             log_f = open(log_file, "w+", buffering=1)
             
-            log_f.write(f"{get_time()}: 准备开始RNA-药物相互作用排名预测...\n")
-            log_f.write(f"{get_time()}: 模型载入中...\n")
+            log_f.write(f"{get_time()}: Starting RNA-drug interaction ranking prediction...\n")
+            log_f.write(f"{get_time()}: Loading model...\n")
             for i in sorted(set(np.random.randint(1, 99, np.random.randint(5, 8)))):
-                log_f.write(f"{get_time()}: 模型载入中... {i}%\n")
-            log_f.write(f"{get_time()}: 模型载入完成！\n")
-            log_f.write(f"{get_time()}: 开始预测！\n")
+                log_f.write(f"{get_time()}: Loading model... {i}%\n")
+            log_f.write(f"{get_time()}: Model loaded successfully!\n")
+            log_f.write(f"{get_time()}: Starting prediction!\n")
             
             process_ret = subprocess.run(
                 [
@@ -315,11 +315,11 @@ def start_infer_drugrank(workspace: str, loading: bool, csv_text: str, fasta_tex
                 env={**os.environ, "DRUGRANK_FASTA_PATH": fasta_path}  # Pass FASTA path via env
             )
             if process_ret.returncode != 0:
-                log_f.write(f"{get_time()}: 预测任务发生错误！\n")
+                log_f.write(f"{get_time()}: Prediction task failed!\n")
             else:
-                log_f.write(f"{get_time()}: 预测任务完成！\n")
+                log_f.write(f"{get_time()}: Prediction task completed!\n")
             ret = pd.read_csv(f"{workspace}/result.csv")
-            log_f.write(f"{get_time()}: 打包结果中...\n")
+            log_f.write(f"{get_time()}: Packaging results...\n")
             subprocess.run(
                 [
                     "zip", "-r", "drugrank_results.zip", "input_smiles.csv", "input_sequences.fasta", "result.csv"
@@ -328,7 +328,7 @@ def start_infer_drugrank(workspace: str, loading: bool, csv_text: str, fasta_tex
                 stdout=log_f,
                 stderr=log_f,
             )
-            log_f.write(f"{get_time()}: 结果打包完成！\n")
+            log_f.write(f"{get_time()}: Results packaging completed!\n")
             log_f.flush()
             log_f.close()
             subprocess.run(
