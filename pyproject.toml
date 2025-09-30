@@ -61,6 +61,11 @@ dependencies = [
   "transformers==4.56.0",
   "numpy<2.0",
   "seaborn>=0.13.2",
+  "xgboost",
+  "rdkit",
+  "joblib",
+  "safetensors",
+  "unimol-lite"
 ]
 
 [project.scripts]
@@ -75,3 +80,4 @@ write_to_template = "version = __version__ = {version!r}\nversion_tuple = __vers
 
 [tool.uv.sources]
 unirna-tf = { git = "ssh://git@git.dp.tech/macromolecule/unirna_transformers", rev = "main" }
+unimol-lite = { git = "ssh://git@github.com/macroversus/unimol_lite.git", rev = "main" }

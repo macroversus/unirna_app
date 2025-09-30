@@ -4,6 +4,7 @@ def main():
     from rna_app.core.acceptor import infer_acceptor
     from rna_app.core.apa import infer_apa
     from rna_app.core.donor import infer_donor
+    from rna_app.core.drugrank import infer_drugrank
     from rna_app.core.lncrna_sublocalization import infer_lncrna_sublocalization
     from rna_app.core.m6a import infer_m6a
     from rna_app.core.pirna import infer_pirna
@@ -28,6 +29,7 @@ def main():
             "acceptor",
             "apa",
             "donor",
+            "drugrank",
             "lncrna_sublocalization",
             "m6a",
             "pirna",
@@ -83,6 +85,18 @@ def main():
                 output_dir=args.output_dir,
                 pretrained=args.pretrained,
                 output_attentions=args.output_attentions,
+            )
+        case "drugrank":
+            # DrugRank needs both CSV and FASTA files
+            import os
+            fasta_path = os.environ.get("DRUGRANK_FASTA_PATH")
+            if not fasta_path:
+                raise ValueError("DrugRank requires FASTA path via DRUGRANK_FASTA_PATH environment variable")
+            infer_drugrank(
+                csv_data=args.in_data,
+                fasta_data=fasta_path,
+                output_dir=args.output_dir,
+                return_df=False,
             )
         case "seq_optimization":
             infer_seq_optimization(
