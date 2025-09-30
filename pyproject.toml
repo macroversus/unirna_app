@@ -59,7 +59,12 @@ dependencies = [
   "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
   "unirna-tf @ git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main",
   "transformers==4.56.0",
-  "numpy<2.0"
+  "numpy<2.0",
+  "xgboost",
+  "rdkit",
+  "joblib",
+  "safetensors",
+  "unimol-lite @ git+ssh://git@github.com/macroversus/unimol_lite.git"
 ]
 
 [project.scripts]
