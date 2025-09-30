@@ -196,14 +196,14 @@ def start_extract_embedding(workspace: str, loading: bool, fasta_text: str, mode
             log_f = open(log_file, "w+", buffering=1)
             with open(in_fasta, "w") as f:
                 f.write(fasta_text)
-            log_f.write(f"{get_time()}: 准备开始提取RNA序列嵌入...\n")
-            log_f.write(f"{get_time()}: 使用模型: {model_type}\n")
-            log_f.write(f"{get_time()}: 提取注意力权重: {'是' if output_attentions else '否'}\n")
-            log_f.write(f"{get_time()}: 模型载入中...\n")
+            log_f.write(f"{get_time()}: Starting RNA sequence embedding extraction...\n")
+            log_f.write(f"{get_time()}: Using model: {model_type}\n")
+            log_f.write(f"{get_time()}: Extract attention weights: {'Yes' if output_attentions else 'No'}\n")
+            log_f.write(f"{get_time()}: Loading model...\n")
             for i in sorted(set(np.random.randint(1, 99, np.random.randint(5, 8)))):
-                log_f.write(f"{get_time()}: 模型载入中... {i}%\n")
-            log_f.write(f"{get_time()}: 模型载入完成！\n")
-            log_f.write(f"{get_time()}: 开始提取嵌入！\n")
+                log_f.write(f"{get_time()}: Loading model... {i}%\n")
+            log_f.write(f"{get_time()}: Model loaded successfully!\n")
+            log_f.write(f"{get_time()}: Starting embedding extraction!\n")
             
             cmd_args = [
                 "rna_app_infer",
@@ -225,24 +225,24 @@ def start_extract_embedding(workspace: str, loading: bool, fasta_text: str, mode
                 stderr=log_f,
             )
             if process_ret.returncode != 0:
-                log_f.write(f"{get_time()}: 嵌入提取任务发生错误！\n")
+                log_f.write(f"{get_time()}: Embedding extraction task failed!\n")
             else:
-                log_f.write(f"{get_time()}: 嵌入提取任务完成！\n")
+                log_f.write(f"{get_time()}: Embedding extraction task completed!\n")
                 
             # Create summary table
             sequences = list(SeqIO.parse(in_fasta, "fasta"))
             summary_data = []
             for i, seq in enumerate(sequences):
                 summary_data.append({
-                    "序列ID": seq.id,
-                    "序列长度": len(seq.seq),
-                    "模型类型": model_type,
-                    "包含注意力": "是" if output_attentions else "否",
-                    "状态": "完成"
+                    "Sequence ID": seq.id,
+                    "Sequence Length": len(seq.seq),
+                    "Model Type": model_type,
+                    "Includes Attention": "Yes" if output_attentions else "No",
+                    "Status": "Completed"
                 })
             ret = pd.DataFrame(summary_data)
             
-            log_f.write(f"{get_time()}: 打包结果中...\n")
+            log_f.write(f"{get_time()}: Packaging results...\n")
             subprocess.run(
                 [
                     "zip", "-r", "embedding_results.zip", "input.fasta", "result.pickle"
@@ -251,7 +251,7 @@ def start_extract_embedding(workspace: str, loading: bool, fasta_text: str, mode
                 stdout=log_f,
                 stderr=log_f,
             )
-            log_f.write(f"{get_time()}: 结果打包完成！\n")
+            log_f.write(f"{get_time()}: Results packaging completed!\n")
             log_f.flush()
             log_f.close()
             subprocess.run(

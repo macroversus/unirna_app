@@ -265,12 +265,12 @@ def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
             print(log_file)
             with open(in_fasta, "w") as f:
                 f.write(fasta_text)
-            log_f.write(f"{get_time()}: 准备开始预测RNA二级结构\n")
-            log_f.write(f"{get_time()}: 模型载入中...\n")
+            log_f.write(f"{get_time()}: Starting RNA secondary structure prediction\n")
+            log_f.write(f"{get_time()}: Loading model...\n")
             for i in sorted(np.random.randint(1, 99, np.random.randint(5, 8))):
-                log_f.write(f"{get_time()}: 模型载入中... {i}%\n")
-            log_f.write(f"{get_time()}: 模型载入完成！\n")
-            log_f.write(f"{get_time()}: 开始预测！\n")
+                log_f.write(f"{get_time()}: Loading model... {i}%\n")
+            log_f.write(f"{get_time()}: Model loaded successfully!\n")
+            log_f.write(f"{get_time()}: Starting prediction!\n")
             process_ret = subprocess.run(
                 [
                     "rna_app_infer",
@@ -285,11 +285,11 @@ def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
                 stderr=log_f,
             )
             if process_ret.returncode != 0:
-                log_f.write(f"{get_time()}: 预测任务发生错误！\n")
+                log_f.write(f"{get_time()}: Prediction task failed!\n")
             else:
-                log_f.write(f"{get_time()}: 预测任务完成！\n")
+                log_f.write(f"{get_time()}: Prediction task completed!\n")
             ret = pd.read_csv(f"{ss_workspace}/result.csv")
-            log_f.write(f"{get_time()}: 打包结果中...\n")
+            log_f.write(f"{get_time()}: Packaging results...\n")
             subprocess.run(
                 [
                     "zip", "-r", "rna_ss_results.zip", "./", "-x", "rna_ss.log"
@@ -298,7 +298,7 @@ def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
                 stdout=log_f,
                 stderr=log_f,
             )
-            log_f.write(f"{get_time()}: 结果打包完成！\n")
+            log_f.write(f"{get_time()}: Results packaging completed!\n")
             subprocess.run(
                 [
                     "zip", "-u", "rna_ss_results.zip", "rna_ss.log"
@@ -306,7 +306,7 @@ def start_infer_rna_ss(loading: bool, fasta_text: str, ss_workspace: str):
                 cwd=ss_workspace,
             )
             if (ret.shape[0]) > 5 or (len("".join(ret["seq"])) > 200):
-                log_f.write(f"{get_time()}: 序列超过5条或核酸数超过200, 不显示二级结构\n")
+                log_f.write(f"{get_time()}: More than 5 sequences or over 200 nucleotides, secondary structure not displayed\n")
                 ss_display_content = ["none", [], [], []]
                 out_status = success_alert
             else:
