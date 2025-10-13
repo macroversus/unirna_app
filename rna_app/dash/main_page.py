@@ -40,7 +40,7 @@ navbar = dmc.Container(
 app.layout = dmc.MantineProvider(
     children=[
         navbar,
-        dmc.Divider(label="Molecule Simulates the Future", labelPosition="center", variant="dashed", size="xs", color="blue"),
+        dmc.Divider(variant="dashed", size="xs", color="blue"),
         html.H1("Uni-RNA Apps", style={"textAlign": "center"}),
         
         # Uni-RNA paper description section
