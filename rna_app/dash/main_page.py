@@ -42,58 +42,88 @@ app.layout = dmc.MantineProvider(
         navbar,
         dmc.Divider(variant="dashed", size="xs", color="blue"),
         html.H1("Uni-RNA Apps", style={"textAlign": "center"}),
-        
+
         # Uni-RNA paper description section
         dmc.Container(
             children=[
-                 dmc.Text(
-                     [
-                         "This website contains the implementations for the main downstream tasks mentioned in the Uni-RNA paper. ",
-                         "Especially, as the tRNA section is patent-pending, its corresponding raw data is provided exclusively on this site and should not be used for any other purpose (",
-                         dmc.Button(
-                             "Click here to access the data",
-                             id="btn-download-trna",
-                             variant="transparent",
-                             size="compact-sm",
-                             c="blue",
+                 # Uni-RNA Introduction
+                 dmc.Paper(
+                     children=[
+                         dmc.Text(
+                             "Uni-RNA is a context-aware pre-trained model developed using 1 billion high-quality RNA sequences spanning diverse types, lengths and species. Uni-RNA achieved superior performances in a spectrum of supervised tasks, including structural prediction, m6A methylation and lncRNA localization, as well as unsupervised evolutionary analyses. For therapeutics, Uni-RNA enables closed-loop optimization of 5′UTRs and suppressor tRNAs, improving translation efficiency and stop codon readthrough. Integrated with a pre-trained chemical model, the multimodal framework achieves >35% hit rates in RNA targeting small molecule screening, in contrast to <1% in conventional high throughput screens. Overall, Uni-RNA represents a new research paradigm to dissect and engineer RNA molecules, unlocking the potential of deep learning to expedite RNA research and therapeutics.",
+                             size="sm",
                              style={
-                                 "textDecoration": "underline", 
-                                 "padding": "0", 
-                                 "height": "auto", 
-                                 "fontWeight": "normal",
-                                 "backgroundColor": "transparent",
-                                 "border": "none",
-                                 "cursor": "pointer",
-                                 "display": "inline",
-                                 "fontSize": "inherit",
-                                 "lineHeight": "inherit"
-                             },
-                             styles={
-                                 "root": {
-                                     "&:hover": {
-                                         "backgroundColor": "transparent !important",
-                                         "color": "#1c7ed6 !important",
-                                         "textDecoration": "underline"
-                                     }
-                                 }
+                                 "textAlign": "justify",
+                                 "lineHeight": "1.8",
+                                 "color": "#495057"
                              }
                          ),
-                         "). Other experimental results and raw data are available at the Registry and database of bioparts for synthetic biology (",
-                         html.A("https://www.biosino.org/rdbsb/", href="https://www.biosino.org/rdbsb/", target="_blank", style={"color": "blue", "textDecoration": "underline"}),
-                         ") under the accession numbers OENR1-OENR11903. Model weights can be found at ",
-                         html.A("https://github.com/macroversus/unirna_app", href="https://github.com/macroversus/unirna_app", target="_blank", style={"color": "blue", "textDecoration": "underline"}),
-                         ", and the wget download password is ",
-                         dmc.Code("LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN", style={"backgroundColor": "#f8f9fa", "padding": "2px 4px", "borderRadius": "3px"}),
-                         "."
                      ],
-                     size="sm",
-                     style={
-                         "textAlign": "justify",
-                         "lineHeight": "1.6",
-                         "marginBottom": "1rem",
-                         "color": "#495057"
-                     }
+                     shadow="xs",
+                     p="md",
+                     mb="lg",
+                     withBorder=True,
+                     style={"backgroundColor": "#f8f9fa"}
                  ),
+
+                 # Website description
+                 dmc.Paper(
+                     children=[
+                         dmc.Text(
+                             [
+                                 "This website contains the implementations for the main downstream tasks mentioned in the Uni-RNA paper. ",
+                                 "Especially, as the tRNA section is patent-pending, its corresponding raw data is provided exclusively on this site and should not be used for any other purpose (",
+                                 dmc.Button(
+                                     "Click here to access the data",
+                                     id="btn-download-trna",
+                                     variant="transparent",
+                                     size="compact-sm",
+                                     c="blue",
+                                     style={
+                                         "textDecoration": "underline",
+                                         "padding": "0",
+                                         "height": "auto",
+                                         "fontWeight": "normal",
+                                         "backgroundColor": "transparent",
+                                         "border": "none",
+                                         "cursor": "pointer",
+                                         "display": "inline",
+                                         "fontSize": "inherit",
+                                         "lineHeight": "inherit"
+                                     },
+                                     styles={
+                                         "root": {
+                                             "&:hover": {
+                                                 "backgroundColor": "transparent !important",
+                                                 "color": "#1c7ed6 !important",
+                                                 "textDecoration": "underline"
+                                             }
+                                         }
+                                     }
+                                 ),
+                                 "). Other experimental results and raw data are available at the Registry and database of bioparts for synthetic biology (",
+                                 html.A("https://www.biosino.org/rdbsb/", href="https://www.biosino.org/rdbsb/", target="_blank", style={"color": "blue", "textDecoration": "underline"}),
+                                 ") under the accession numbers OENR1-OENR11903. Model weights can be found at ",
+                                 html.A("https://github.com/macroversus/unirna_app", href="https://github.com/macroversus/unirna_app", target="_blank", style={"color": "blue", "textDecoration": "underline"}),
+                                 ", and the wget download password is ",
+                                 dmc.Code("LzzM5OQtTGKYHSwpQqOAn6fL7Lu1medN", style={"backgroundColor": "#e7f5ff", "padding": "2px 6px", "borderRadius": "3px", "fontWeight": "500"}),
+                                 "."
+                             ],
+                             size="sm",
+                             style={
+                                 "textAlign": "justify",
+                                 "lineHeight": "1.8",
+                                 "color": "#495057"
+                             }
+                         ),
+                     ],
+                     shadow="xs",
+                     p="md",
+                     mb="md",
+                     withBorder=True,
+                 ),
+
+                 # Update notification
                  dmc.Alert(
                      children=[
                          dmc.Group([
@@ -106,15 +136,17 @@ app.layout = dmc.MantineProvider(
                      ],
                      color="green",
                      variant="light",
-                     mb="md",
+                     mb="lg",
                  ),
+
+                 # Copyright notice
                  dmc.Divider(
                      label="© Copyright Notice",
                      labelPosition="left",
                      variant="solid",
                      size="xs",
                      color="#e9ecef",
-                     style={"marginTop": "1rem", "marginBottom": "1rem"},
+                     style={"marginTop": "0.5rem", "marginBottom": "1rem"},
                      styles={
                          "label": {
                              "fontSize": "1.1rem",
@@ -123,16 +155,25 @@ app.layout = dmc.MantineProvider(
                          }
                      }
                  ),
-                 dmc.Text(
-                     "The Shanghai Institute for Advanced Algorithms Research (hereinafter referred to as “IAAR”) and Beijing DP Technology (hereinafter referred to as “DP Technology”) fully possess the copyright to this code. Without the written authorization of IAAR and DP Technology, no natural person or enterprise shall copy, forward, or perform any unauthorized act. If authorization is granted, the source must be clearly indicated. Otherwise, IAAR and DP Technology have the right to hold the violator liable for violating the above-mentioned terms and reserve the right to pursue further legal action.",
-                     size="sm",
-                     style={
-                         "textAlign": "justify",
-                         "lineHeight": "1.6",
-                         "marginBottom": "1.5rem",
-                         "color": "#6c757d",
-                         "fontStyle": "italic"
-                     }
+
+                 dmc.Paper(
+                     children=[
+                         dmc.Text(
+                             "The Shanghai Institute for Advanced Algorithms Research (hereinafter referred to as \"IAAR\") and Beijing DP Technology (hereinafter referred to as \"DP Technology\") fully possess the copyright to this code. Without the written authorization of IAAR and DP Technology, no natural person or enterprise shall copy, forward, or perform any unauthorized act. If authorization is granted, the source must be clearly indicated. Otherwise, IAAR and DP Technology have the right to hold the violator liable for violating the above-mentioned terms and reserve the right to pursue further legal action.",
+                             size="sm",
+                             style={
+                                 "textAlign": "justify",
+                                 "lineHeight": "1.8",
+                                 "color": "#6c757d",
+                                 "fontStyle": "italic"
+                             }
+                         )
+                     ],
+                     shadow="xs",
+                     p="md",
+                     mb="lg",
+                     withBorder=True,
+                     style={"backgroundColor": "#fffbf5"}
                  )
             ],
             size="lg",
