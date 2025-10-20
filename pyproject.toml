@@ -1,0 +1,83 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools",
+  "setuptools-scm>=8.0.4",
+]
+
+[project]
+name = "rna_app"
+description = "Uni-RNA Apps"
+readme = "README.md"
+keywords = [
+  "Deep Learning",
+  "RNA",
+]
+license = {file = "LICENSE"}
+maintainers = [
+    {name = "Lvjun Guo", email = "guolj@dp.tech"},
+    {name = "Shizhi Ding", email = "dingshizhi@dp.tech"},
+]
+authors = [
+    {name = "Zhiyuan Chen", email = "chenzhiyuan@dp.tech"},
+    {name = "Xi Wang", email = "wangx@dp.tech"},
+    {name = "Lvjun Guo", email = "guolj@dp.tech"},
+    {name = "Shizhi Ding", email = "dingshizhi@dp.tech"},
+]
+requires-python = ">=3.10"
+classifiers = [
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dynamic = [
+  "version",
+]
+dependencies = [
+  "biopython",
+  "dp-launching-sdk",
+  "setuptools-scm",
+  "pytest",
+  "pytest-cov",
+  "dash<3",
+  "plotly",
+  "gunicorn",
+  "dash-mantine-components",
+  "dash-ag-grid",
+  "dash-iconify",
+  "dash-auth",
+  "dash-bio",
+  "diskcache",
+  "multiprocess",
+  "psutil",
+  "dash-extensions",
+  "deepprotein@git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna",
+  "unirna-tf",
+  "transformers==4.56.0",
+  "numpy<2.0",
+  "seaborn>=0.13.2",
+  "xgboost",
+  "rdkit",
+  "joblib",
+  "safetensors",
+  "unimol-lite"
+]
+
+[project.scripts]
+rna_app_infer = "rna_app.run_infer:main"
+
+[tool.setuptools]
+packages = ["rna_app"]
+
+[tool.setuptools_scm]
+write_to = "rna_app/_version.py"
+write_to_template = "version = __version__ = {version!r}\nversion_tuple = __version_tuple__ = {version_tuple!r}\nrevision = __revision__ = {scm_version.node!r}\n"
+
+[tool.uv.sources]
+unirna-tf = { git = "ssh://git@git.dp.tech/macromolecule/unirna_transformers", rev = "main" }
+unimol-lite = { git = "ssh://git@github.com/macroversus/unimol_lite.git", rev = "main" }

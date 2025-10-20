@@ -1,0 +1,32 @@
+pytest:
+  image: $DOCKER_BASE_IMAGE
+  tags:
+    - t4
+  before_script:
+    - "[ -f $HOME/.config/pip/pip.conf ] && rm $HOME/.config/pip/pip.conf"
+    - "[ -f $HOME/.pip/pip.conf ] && rm $HOME/.pip/pip.conf"
+    - "[ -f $HOME/.wgetrc ] && rm $HOME/.wgetrc"
+    - "[ -f $HOME/.curlrc ] && rm $HOME/.curlrc"
+    - apt update -y
+    - apt install zip -y
+    - pip config set global.index-url $PYPI_INDEX
+    - pip install -U pip setuptools wheel
+    # 在基底镜像中已经安装了git，所以这里不需要再安装
+    # Setup SSH keys for deepprotein and rna_transformers
+    # - mkdir -p ~/.ssh
+    # - echo "$DPROTEIN_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa_dpt
+    # - chmod 600 ~/.ssh/id_rsa_dpt
+    # - echo "$RNA_TF_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa_rna_tf
+    # - chmod 600 ~/.ssh/id_rsa_rna_tf
+    # - ssh-keyscan -t rsa git.dp.tech >> ~/.ssh/known_hosts
+    # Install dependencies
+    # - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_dpt' pip install git+ssh://git@git.dp.tech/macromolecule/deepprotein@deeprna
+    # - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_rna_tf' pip install git+ssh://git@git.dp.tech/macromolecule/unirna_transformers@main
+    - pip install -e .
+    - sh download_checkpoints.sh
+  script:
+    - pytest -v --cov .
+
+variables:
+  PYPI_INDEX: "https://pypi.tuna.tsinghua.edu.cn/simple"
+  DOCKER_BASE_IMAGE: "registry.dp.tech/dptech/prod-11542/rna-app-base:0.1"

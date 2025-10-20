@@ -1,0 +1,50 @@
+{
+    "extract_embedding": {
+        "page_name": "RNA sequence feature extraction tool",
+        "href": "/extract_embedding",
+        "fig": "/assets/embedding.jpg",
+        "description": "Use Uni-RNA's pre-trained weights to efficiently characterize sequences. Input a nucleic acid sequence and obtain the corresponding feature vector, which can be used for a series of downstream analyses."
+    },
+    "rna_ss": {
+        "page_name": "RNA second structure prediction tool",
+        "href": "/rna_ss",
+        "fig": "/assets/RNA二级结构.png",
+        "description": "Use the fine-tuned Uni-RNA to accurately predict the secondary structure of RNA sequences. We provide two fine-tuned versions to choose from, one based on the Uni-RNA self-built dataset and the other based on the RNAStralign dataset."
+    },
+    "utr": {
+        "page_name": "mRNA 5'UTR mean ribosome load (MRL) prediction tool",
+        "href": "/utr",
+        "fig": "/assets/5UTR.jpg",
+        "description": "Use the fine-tuned Uni-RNA to accurately predict the mean ribosome load of the 5'UTR region of the mRNA sequence."
+    },
+    "apa": {
+        "page_name": "mRNA 3'UTR alternative polyadenylation prediction tool",
+        "href": "/apa",
+        "fig": "/assets/3UTR.jpg",
+        "description": "Use the fine-tuned Uni-RNA to accurately predict alternative polyadenylation events in the 3'UTR region of mRNA sequences."
+    },
+    "m6a": {
+        "page_name": "RNA m6A modification site prediction tool",
+        "href": "/m6a",
+        "fig": "/assets/m6A.png",
+        "description": "Use the fine-tuned Uni-RNA to accurately predict the modification probability of the adenosine at the central position of the sequence"
+    },
+    "lncrna_sublocalization": {
+        "page_name": "Long non-coding RNA subcellular localization prediction tool",
+        "href": "/lncrna_sublocalization",
+        "fig": "/assets/lncRNA.jpg",
+        "description": "Long non-coding RNAs (lncRNAs) play a crucial role in the regulatory network of RNA functions. Using the Uni-RNA pre-training model, we efficiently and accurately predict the potential localization of lncRNAs within cells and extract important motifs through the model's attention scores."
+    },
+    "seq_optimization": {
+        "page_name": "RNA sequence optimization tool",
+        "href": "/seq_optimization",
+        "fig": "/assets/RNA序列优化.jpg",
+        "description": "Use the fine-tuned Uni-RNA model to optimize template sequence based on a given biological metric, generating new sequences with enhanced biological activity."
+    },
+    "drugrank": {
+        "page_name": "Affinity screening tool for RNA-targeting small molecules",
+        "href": "/drugrank",
+        "fig": "/assets/RNA小分子.jpg",
+        "description": "Given the sequence of the RNA target and the small molecule library to be screened, use the fine-tuned Uni-RNA mode to screen out the small molecule with the strongest binding ability to RNA."
+    }
+}
